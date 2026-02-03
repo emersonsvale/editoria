@@ -1,7 +1,7 @@
 <template>
   <nav class="fixed top-0 left-0 right-0 h-16 border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md z-50 px-6 flex items-center justify-between">
     <NuxtLink to="/" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
-      <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center">
+      <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
         <span class="text-white text-xs font-bold">E</span>
       </div>
       <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-slate-100">EditorIA</span>
@@ -10,7 +10,7 @@
     <div class="flex items-center gap-4">
       <NuxtLink
         to="/editor"
-        class="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+        class="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
         @click="(e) => { if (requireAuth?.shouldInterceptLink('/editor')) { e.preventDefault(); $emit('open-auth') } }"
       >
         <Icon name="auto_awesome" :size="18" />
@@ -21,12 +21,12 @@
       <template v-if="auth?.isAuthenticated.value">
         <button
           type="button"
-          class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-50 dark:bg-violet-900/20 border border-violet-200/60 dark:border-violet-800/50 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-colors cursor-pointer"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30 hover:bg-primary/20 transition-colors cursor-pointer"
           title="Seus créditos"
           @click="showCreditsModal = true"
         >
-          <Icon name="bolt" :size="16" class="text-violet-600 dark:text-violet-400" />
-          <span class="text-sm font-semibold text-violet-700 dark:text-violet-300">{{ credits.credits }}</span>
+          <Icon name="bolt" :size="16" class="text-primary" />
+          <span class="text-sm font-semibold text-primary">{{ credits.credits }}</span>
           <span class="text-xs text-slate-500 dark:text-slate-400">créditos</span>
         </button>
 
@@ -40,13 +40,13 @@
           >
             <div
               v-if="userAvatar"
-              class="w-9 h-9 rounded-full overflow-hidden border-2 border-slate-200 dark:border-slate-600 ring-2 ring-transparent hover:ring-violet-500/30"
+              class="w-9 h-9 rounded-full overflow-hidden border-2 border-slate-200 dark:border-slate-600 ring-2 ring-transparent hover:ring-primary/30"
             >
               <img :alt="userName" :src="userAvatar" class="w-full h-full object-cover" />
             </div>
             <div
               v-else
-              class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br from-violet-500 to-purple-600"
+              class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold bg-primary"
             >
               {{ userInitials }}
             </div>
@@ -67,7 +67,7 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ userEmail }}</p>
                 <button
                   type="button"
-                  class="text-xs text-violet-600 dark:text-violet-400 mt-1 font-medium hover:underline text-left w-full"
+                  class="text-xs text-primary mt-1 font-medium hover:underline text-left w-full"
                   @click="openCreditsAndCloseMenu"
                 >
                   {{ credits.credits }} créditos — Ver detalhes
@@ -100,7 +100,7 @@
       <template v-else>
         <button
           type="button"
-          class="px-5 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.02] transition-all flex items-center gap-2"
+          class="px-5 py-2.5 rounded-full text-sm font-semibold bg-primary text-white shadow-lg shadow-primary/25 hover:opacity-90 hover:scale-[1.02] transition-all flex items-center gap-2"
           @click="$emit('open-auth')"
         >
           <Icon name="person" :size="18" />

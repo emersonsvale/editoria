@@ -53,16 +53,16 @@
               />
 
               <!-- Indicador de custo -->
-              <div class="flex items-center gap-1 px-2 py-1 bg-violet-100 dark:bg-violet-900/30 rounded-lg">
+              <div class="flex items-center gap-1 px-2 py-1 bg-primary/10 rounded-lg">
                 <Icon name="bolt" :size="14" class="text-yellow-500" />
-                <span class="text-xs font-medium text-violet-600 dark:text-violet-400">1 crédito</span>
+                <span class="text-xs font-medium text-primary">1 crédito</span>
               </div>
             </div>
 
             <button
               class="p-3 rounded-xl transition-all flex items-center justify-center"
               :class="{
-                'bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:opacity-90': !isLoading && !disabled && prompt.trim(),
+                'bg-primary text-white hover:opacity-90': !isLoading && !disabled && prompt.trim(),
                 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed': isLoading || disabled || !prompt.trim()
               }"
               :disabled="isLoading || disabled || !prompt.trim()"

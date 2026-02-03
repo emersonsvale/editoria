@@ -93,17 +93,17 @@ const iconName = computed(() => (props.variant === 'danger' ? 'delete' : 'info')
 const iconBgClass = computed(() =>
   props.variant === 'danger'
     ? 'bg-red-100 dark:bg-red-900/30'
-    : 'bg-violet-100 dark:bg-violet-900/30'
+    : 'bg-primary/10'
 )
 const iconColorClass = computed(() =>
   props.variant === 'danger'
     ? 'text-red-600 dark:text-red-400'
-    : 'text-violet-600 dark:text-violet-400'
+    : 'text-primary'
 )
 const confirmButtonClass = computed(() =>
   props.variant === 'danger'
     ? 'bg-red-500 hover:bg-red-600'
-    : 'bg-violet-500 hover:bg-violet-600'
+    : 'bg-primary hover:opacity-90'
 )
 
 function handleConfirm() {

@@ -13,8 +13,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
 .active-nav {
-  background-color: rgba(19, 91, 236, 0.1);
-  color: #135bec;
+  background-color: rgba(30, 123, 82, 0.15);
+  color: #1e7b52;
 }
 
 .canvas-dot-grid {

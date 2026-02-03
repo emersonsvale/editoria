@@ -5,7 +5,7 @@
       <!-- Logo -->
       <NuxtLink 
         to="/" 
-        class="w-11 h-11 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 hover:scale-105 transition-all"
+        class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:scale-105 transition-all"
         title="Voltar ao início"
       >
         <span class="text-white font-bold text-sm italic">EI</span>
@@ -16,7 +16,7 @@
       <!-- Ferramentas -->
       <div class="flex flex-col gap-1">
         <button 
-          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-all group"
+          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 transition-all group"
           title="Gerar imagens"
           :disabled="!hasCarousel || carouselIsGeneratingImages"
           @click="handleGenerateAllImages"
@@ -25,7 +25,7 @@
         </button>
         <button 
           v-if="hasCarousel"
-          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-all group"
+          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 transition-all group"
           title="Baixar slides"
           @click="downloadAllSlides"
         >
@@ -33,7 +33,7 @@
         </button>
         <button 
           v-if="hasCarousel"
-          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-all group"
+          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 transition-all group"
           title="Novo carrossel"
           @click="startNew"
         >
@@ -55,7 +55,7 @@
         <header class="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-5">
           <div class="flex items-center gap-3">
             <div class="flex items-center gap-2">
-              <Icon name="view_carousel" :size="20" class="text-violet-500" />
+              <Icon name="view_carousel" :size="20" class="text-primary" />
               <span class="text-sm font-medium text-slate-700 dark:text-slate-300">
                 Criador de Carrosséis
               </span>
@@ -70,24 +70,24 @@
             <span class="text-xs text-slate-500">Gerando imagens...</span>
             <div class="w-32 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
               <div 
-                class="h-full bg-gradient-to-r from-violet-500 to-purple-600 rounded-full transition-all duration-500"
+                class="h-full bg-primary rounded-full transition-all duration-500"
                 :style="{ width: `${carouselProgress}%` }"
               />
             </div>
-            <span class="text-xs text-violet-500 font-medium">{{ carouselProgress }}%</span>
+            <span class="text-xs text-primary font-medium">{{ carouselProgress }}%</span>
           </div>
         </header>
 
         <!-- Canvas com slides -->
-        <div class="flex-1 overflow-auto p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-100 via-slate-100 to-slate-200 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
+        <div class="flex-1 overflow-auto p-6 bg-slate-100 dark:bg-slate-950">
           <!-- Estado vazio -->
           <div 
             v-if="!hasCarousel"
             class="h-full flex items-center justify-center"
           >
             <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 p-8 text-center max-w-md">
-              <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-violet-500/10 to-purple-500/10 rounded-2xl flex items-center justify-center">
-                <Icon name="view_carousel" :size="40" class="text-violet-500" />
+              <div class="w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-2xl flex items-center justify-center">
+                <Icon name="view_carousel" :size="40" class="text-primary" />
               </div>
               <h3 class="text-xl font-semibold text-slate-800 dark:text-white mb-2">Crie seu Carrossel</h3>
               <p class="text-slate-500 dark:text-slate-400 mb-4 text-sm">
@@ -174,7 +174,7 @@
 
             <!-- Botão adicionar slide -->
             <button
-              class="w-72 aspect-[3/4] bg-white/50 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-violet-400 dark:hover:border-violet-500 transition-colors flex flex-col items-center justify-center gap-2 text-slate-400 hover:text-violet-500"
+              class="w-72 aspect-[3/4] bg-white/50 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary/50 transition-colors flex flex-col items-center justify-center gap-2 text-slate-400 hover:text-primary"
               @click="carousel.addSlide()"
             >
               <Icon name="add" :size="32" />
@@ -202,12 +202,12 @@
                     type="button"
                     class="flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-left"
                     :class="{
-                      'border-pink-500 bg-pink-50 dark:bg-pink-900/20': form.socialNetwork === 'instagram',
-                      'border-slate-200 dark:border-slate-700 hover:border-pink-300': form.socialNetwork !== 'instagram'
+                      'border-primary bg-primary/10 dark:bg-primary/20': form.socialNetwork === 'instagram',
+                      'border-slate-200 dark:border-slate-700 hover:border-primary/50': form.socialNetwork !== 'instagram'
                     }"
                     @click="form.socialNetwork = 'instagram'"
                   >
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 via-purple-500 to-orange-500 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                       <Icon name="photo_camera" :size="16" class="text-white" />
                     </div>
                     <div>
@@ -242,7 +242,7 @@
                 </label>
                 <textarea
                   v-model="form.topic"
-                  class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 resize-none"
+                  class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
                   placeholder="Ex: 5 dicas para aumentar sua produtividade"
                   rows="3"
                   required
@@ -253,7 +253,7 @@
                     v-for="example in exampleTopics"
                     :key="example"
                     type="button"
-                    class="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-violet-100 dark:hover:bg-violet-900/30 text-slate-500 hover:text-violet-600 rounded text-[10px] transition-colors"
+                    class="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-primary/10 text-slate-500 hover:text-primary rounded text-[10px] transition-colors"
                     @click="form.topic = example"
                   >
                     {{ example }}
@@ -273,7 +273,7 @@
                     type="button"
                     class="px-3 py-2 rounded-lg text-xs font-medium transition-all"
                     :class="{
-                      'bg-violet-500 text-white': form.tone === tone.value,
+                      'bg-primary text-white': form.tone === tone.value,
                       'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200': form.tone !== tone.value
                     }"
                     @click="form.tone = tone.value"
@@ -293,7 +293,7 @@
                   type="range"
                   min="3"
                   max="10"
-                  class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-violet-500"
+                  class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary"
                 />
               </div>
 
@@ -323,8 +323,8 @@
 
                 <!-- Upload area -->
                 <div
-                  class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 text-center hover:border-violet-400 cursor-pointer transition-colors"
-                  :class="{ 'border-violet-500 bg-violet-50 dark:bg-violet-900/20': isDragging }"
+                  class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-3 text-center hover:border-primary/50 cursor-pointer transition-colors"
+                  :class="{ 'border-primary bg-primary/10': isDragging }"
                   @click="triggerFileInput"
                   @dragover.prevent="isDragging = true"
                   @dragleave.prevent="isDragging = false"
@@ -340,7 +340,7 @@
                   />
                   <Icon name="cloud_upload" :size="24" class="text-slate-400 mx-auto mb-1" />
                   <p class="text-xs text-slate-500">
-                    Arraste ou <span class="text-violet-500">clique</span> (até 5)
+                    Arraste ou <span class="text-primary">clique</span> (até 5)
                   </p>
                 </div>
               </div>
@@ -348,7 +348,7 @@
               <!-- Botão gerar -->
               <button
                 type="button"
-                class="w-full py-3 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-xl font-semibold shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full py-3 bg-primary hover:opacity-90 text-white rounded-xl font-semibold shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="isLoading || !form.topic.trim()"
                 @click="handleGenerate"
               >
@@ -366,7 +366,7 @@
               <div 
                 class="w-10 h-10 rounded-xl flex items-center justify-center"
                 :class="currentCarousel?.socialNetwork === 'instagram' 
-                  ? 'bg-gradient-to-br from-pink-500 via-purple-500 to-orange-500' 
+                  ? 'bg-primary' 
                   : 'bg-blue-600'"
               >
                 <Icon :name="currentCarousel?.socialNetwork === 'instagram' ? 'photo_camera' : 'work'" :size="20" class="text-white" />
@@ -393,7 +393,7 @@
               </div>
               <textarea
                 :value="currentCarousel?.caption || ''"
-                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/30 resize-none"
+                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
                 rows="4"
                 @input="updateCaption"
               />
@@ -417,11 +417,11 @@
                 <span
                   v-for="(hashtag, index) in (currentCarousel?.hashtags || [])"
                   :key="index"
-                  class="inline-flex items-center gap-1 px-2 py-0.5 bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 rounded-full text-xs group"
+                  class="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-xs group"
                 >
                   #{{ hashtag }}
                   <button
-                    class="w-3.5 h-3.5 rounded-full hover:bg-violet-200 dark:hover:bg-violet-800 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    class="w-3.5 h-3.5 rounded-full hover:bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     @click="removeHashtag(index)"
                   >
                     <Icon name="close" :size="8" />
@@ -432,12 +432,12 @@
                 <input
                   v-model="newHashtag"
                   type="text"
-                  class="flex-1 px-2 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-violet-500"
+                  class="flex-1 px-2 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="Adicionar hashtag"
                   @keydown.enter.prevent="addHashtag"
                 />
                 <button
-                  class="px-3 py-1.5 bg-violet-500 hover:bg-violet-600 text-white rounded-lg text-xs font-medium"
+                  class="px-3 py-1.5 bg-primary hover:opacity-90 text-white rounded-lg text-xs font-medium"
                   @click="addHashtag"
                 >
                   +
@@ -448,7 +448,7 @@
             <!-- Ações -->
             <div class="space-y-2 pt-4 border-t border-slate-200 dark:border-slate-700">
               <button
-                class="w-full py-2.5 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                class="w-full py-2.5 bg-primary hover:opacity-90 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50"
                 :disabled="carouselIsGeneratingImages"
                 @click="handleGenerateAllImages"
               >
@@ -523,7 +523,7 @@
                     Cancelar
                   </button>
                   <button
-                    class="flex-1 py-2 bg-violet-500 hover:bg-violet-600 text-white rounded-lg text-sm font-medium"
+                    class="flex-1 py-2 bg-primary hover:opacity-90 text-white rounded-lg text-sm font-medium"
                     @click="saveSlideEdit"
                   >
                     Salvar
@@ -809,7 +809,7 @@ input[type="range"] { -webkit-appearance: none; }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 16px; height: 16px;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: #1e7b52;
   border-radius: 50%;
   cursor: pointer;
 }

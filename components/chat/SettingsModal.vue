@@ -18,8 +18,8 @@
           <div class="p-6 pb-4 border-b border-slate-200 dark:border-slate-700">
             <div class="flex items-center justify-between gap-4">
               <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center flex-shrink-0">
-                  <Icon name="settings" :size="26" class="text-violet-600 dark:text-violet-400" />
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Icon name="settings" :size="26" class="text-primary" />
                 </div>
                 <div>
                   <h2 id="settings-modal-title" class="text-xl font-bold text-slate-900 dark:text-white">
@@ -44,10 +44,10 @@
           <!-- Conteúdo -->
           <div class="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
             <!-- Créditos resumo -->
-            <section class="p-4 rounded-xl border border-violet-200 dark:border-violet-800/50 bg-gradient-to-r from-violet-500/10 to-purple-500/10">
+            <section class="p-4 rounded-xl border border-primary/30 bg-primary/10">
               <div class="flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                  <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
                     <Icon name="bolt" :size="20" class="text-white" />
                   </div>
                   <div>
@@ -57,7 +57,7 @@
                 </div>
                 <button
                   type="button"
-                  class="px-4 py-2 rounded-xl text-sm font-medium bg-violet-500 text-white hover:bg-violet-600 transition-colors flex-shrink-0"
+                  class="px-4 py-2 rounded-xl text-sm font-medium bg-primary text-white hover:opacity-90 transition-colors flex-shrink-0"
                   @click="$emit('close'); $emit('open-credits')"
                 >
                   Comprar mais
@@ -73,7 +73,7 @@
               <select
                 id="settings-size"
                 v-model="localSettings.defaultImageSize"
-                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-colors appearance-none cursor-pointer"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none cursor-pointer"
               >
                 <option value="1:1">Quadrado (1:1)</option>
                 <option value="16:9">Paisagem (16:9)</option>
@@ -96,8 +96,8 @@
                 type="button"
                 role="switch"
                 :aria-checked="localSettings.autoSave"
-                class="relative w-12 h-6 rounded-full transition-colors flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
-                :class="localSettings.autoSave ? 'bg-violet-500' : 'bg-slate-200 dark:bg-slate-700'"
+                class="relative w-12 h-6 rounded-full transition-colors flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+                :class="localSettings.autoSave ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700'"
                 @click="localSettings.autoSave = !localSettings.autoSave"
               >
                 <span
@@ -110,7 +110,7 @@
             <!-- Sobre -->
             <section class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50">
               <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
                   <span class="text-white font-bold text-sm italic">EI</span>
                 </div>
                 <div class="min-w-0">
@@ -150,7 +150,7 @@
             </button>
             <button
               type="button"
-              class="px-6 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:opacity-95 transition-opacity"
+              class="px-6 py-2.5 rounded-xl text-sm font-medium bg-primary text-white hover:opacity-95 transition-opacity"
               @click="handleSave"
             >
               Salvar

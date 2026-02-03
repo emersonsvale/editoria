@@ -22,7 +22,7 @@
               type="button"
               class="flex-1 py-4 text-sm font-semibold transition-colors"
               :class="view === 'login'
-                ? 'text-violet-600 dark:text-violet-400 border-b-2 border-violet-500 bg-violet-50/50 dark:bg-violet-900/10'
+                ? 'text-primary border-b-2 border-primary bg-primary/5 dark:bg-primary/10'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'"
               @click="view = 'login'"
             >
@@ -32,7 +32,7 @@
               type="button"
               class="flex-1 py-4 text-sm font-semibold transition-colors"
               :class="view === 'cadastro'
-                ? 'text-violet-600 dark:text-violet-400 border-b-2 border-violet-500 bg-violet-50/50 dark:bg-violet-900/10'
+                ? 'text-primary border-b-2 border-primary bg-primary/5 dark:bg-primary/10'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'"
               @click="view = 'cadastro'"
             >
@@ -66,7 +66,7 @@
                   type="email"
                   required
                   placeholder="seu@email.com"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                 />
               </div>
               <div>
@@ -79,11 +79,11 @@
                   :type="showLoginSenha ? 'text' : 'password'"
                   required
                   placeholder="••••••••"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                 />
                 <button
                   type="button"
-                  class="mt-1 text-xs text-violet-600 dark:text-violet-400 hover:underline"
+                  class="mt-1 text-xs text-primary hover:underline"
                   @click="showLoginSenha = !showLoginSenha"
                 >
                   {{ showLoginSenha ? 'Ocultar' : 'Mostrar' }} senha
@@ -91,7 +91,7 @@
               </div>
               <button
                 type="button"
-                class="text-sm text-violet-600 dark:text-violet-400 hover:underline"
+                class="text-sm text-primary hover:underline"
                 @click="view = 'recuperar'"
               >
                 Esqueci minha senha
@@ -100,7 +100,7 @@
               <button
                 type="submit"
                 :disabled="authLoading"
-                class="w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white font-semibold hover:opacity-95 transition-opacity disabled:opacity-50"
+                class="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:opacity-95 transition-opacity disabled:opacity-50"
               >
                 {{ authLoading ? 'Entrando...' : 'Entrar' }}
               </button>
@@ -122,7 +122,7 @@
                   type="text"
                   required
                   placeholder="Seu nome"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                 />
               </div>
               <div>
@@ -135,7 +135,7 @@
                   type="email"
                   required
                   placeholder="seu@email.com"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                 />
               </div>
               <div>
@@ -149,11 +149,11 @@
                   required
                   minlength="6"
                   placeholder="Mínimo 6 caracteres"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                 />
                 <button
                   type="button"
-                  class="mt-1 text-xs text-violet-600 dark:text-violet-400 hover:underline"
+                  class="mt-1 text-xs text-primary hover:underline"
                   @click="showCadastroSenha = !showCadastroSenha"
                 >
                   {{ showCadastroSenha ? 'Ocultar' : 'Mostrar' }} senha
@@ -163,7 +163,7 @@
               <button
                 type="submit"
                 :disabled="authLoading"
-                class="w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white font-semibold hover:opacity-95 transition-opacity disabled:opacity-50"
+                class="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:opacity-95 transition-opacity disabled:opacity-50"
               >
                 {{ authLoading ? 'Criando conta...' : 'Criar conta' }}
               </button>
@@ -188,7 +188,7 @@
                   type="email"
                   required
                   placeholder="seu@email.com"
-                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                 />
               </div>
               <button
@@ -202,7 +202,7 @@
               <button
                 type="submit"
                 :disabled="authLoading"
-                class="w-full py-3 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white font-semibold hover:opacity-95 transition-opacity disabled:opacity-50"
+                class="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:opacity-95 transition-opacity disabled:opacity-50"
               >
                 {{ authLoading ? 'Enviando...' : 'Enviar link' }}
               </button>

@@ -12,10 +12,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#000000',
+        // Verde escuro estilo Supabase (#34B27B é o verde oficial; este é mais escuro)
+        primary: '#1e7b52',
         'background-light': '#ffffff',
         'background-dark': '#0a0a0a',
-        accent: '#ff8c37',
+        accent: '#248a5c',
         'panel-light': '#ffffff',
         'panel-dark': '#1e293b',
       },

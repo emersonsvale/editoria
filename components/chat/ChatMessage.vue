@@ -9,7 +9,7 @@
     <!-- Avatar -->
     <div 
       v-if="message.role === 'assistant'"
-      class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-violet-500 to-purple-600 text-white"
+      class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-primary text-white"
     >
       <Icon name="auto_awesome" :size="18" />
     </div>
@@ -35,9 +35,9 @@
       <!-- Loading indicator -->
       <div v-if="message.isLoading" class="flex items-center gap-2 text-slate-500">
         <div class="flex gap-1">
-          <span class="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
-          <span class="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
-          <span class="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+          <span class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+          <span class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+          <span class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 300ms"></span>
         </div>
         <span class="text-xs">Gerando imagem...</span>
       </div>

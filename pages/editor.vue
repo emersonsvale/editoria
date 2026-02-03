@@ -5,7 +5,7 @@
       <!-- Logo -->
       <NuxtLink 
         to="/" 
-        class="w-11 h-11 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 hover:scale-105 transition-all"
+        class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:scale-105 transition-all"
         title="Voltar ao início"
       >
         <span class="text-white font-bold text-sm italic">EI</span>
@@ -16,7 +16,7 @@
       <!-- Ferramentas rápidas -->
       <div class="flex flex-col gap-1">
         <button 
-          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-all group"
+          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 transition-all group"
           title="Nova imagem"
           @click="focusInput"
         >
@@ -24,7 +24,7 @@
         </button>
         <button 
           v-if="generatedImages.length > 0"
-          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-all group"
+          class="w-11 h-11 rounded-xl flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/10 transition-all group"
           title="Download"
           @click="generatedImages.length > 0 && handleDownload(generatedImages[0])"
         >
@@ -36,12 +36,12 @@
 
       <!-- Créditos -->
       <button 
-        class="w-11 h-11 rounded-xl flex items-center justify-center bg-gradient-to-br from-amber-400/20 to-orange-500/20 text-amber-600 dark:text-amber-400 relative hover:from-amber-400/30 hover:to-orange-500/30 transition-all group"
+        class="w-11 h-11 rounded-xl flex items-center justify-center bg-amber-400/20 text-amber-600 dark:text-amber-400 relative hover:bg-amber-400/30 transition-all group"
         title="Seus créditos"
         @click="showCreditsModal = true"
       >
         <Icon name="bolt" :size="20" class="group-hover:scale-110 transition-transform" />
-        <span class="absolute -bottom-1 -right-1 text-[10px] font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+        <span class="absolute -bottom-1 -right-1 text-[10px] font-bold bg-amber-500 text-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
           {{ chatStore.credits.credits }}
         </span>
       </button>
@@ -96,15 +96,15 @@
         </header>
 
         <!-- Canvas -->
-        <div class="flex-1 overflow-auto p-8 flex items-center justify-center bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-100 via-slate-100 to-slate-200 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
+        <div class="flex-1 overflow-auto p-8 flex items-center justify-center bg-slate-100 dark:bg-slate-950">
           <!-- Estado vazio - mais atrativo -->
           <div 
             v-if="generatedImages.length === 0"
             class="w-full max-w-xl"
           >
             <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 p-8 text-center">
-              <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-violet-500/10 to-purple-500/10 rounded-2xl flex items-center justify-center">
-                <Icon name="auto_awesome" :size="40" class="text-violet-500" />
+              <div class="w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-2xl flex items-center justify-center">
+                <Icon name="auto_awesome" :size="40" class="text-primary" />
               </div>
               <h3 class="text-xl font-semibold text-slate-800 dark:text-white mb-2">Comece a criar</h3>
               <p class="text-slate-500 dark:text-slate-400 mb-6 text-sm">
@@ -114,7 +114,7 @@
                 <button 
                   v-for="quickPrompt in quickPrompts"
                   :key="quickPrompt.label"
-                  class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-violet-100 dark:hover:bg-violet-900/30 text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 rounded-full text-sm font-medium transition-all flex items-center gap-2"
+                  class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-primary/10 text-slate-600 dark:text-slate-400 hover:text-primary rounded-full text-sm font-medium transition-all flex items-center gap-2"
                   @click="handleQuickPrompt(quickPrompt.prompt)"
                 >
                   <Icon :name="quickPrompt.icon" :size="16" />
@@ -192,7 +192,7 @@
               :key="image.id"
               class="relative w-14 h-14 rounded-xl overflow-hidden cursor-pointer flex-shrink-0 border-2 transition-all hover:scale-105 group/thumb"
               :class="{
-                'border-violet-500 ring-2 ring-violet-500/20': generatedImages.some(img => img.id === image.id),
+                'border-primary ring-2 ring-primary/20': generatedImages.some(img => img.id === image.id),
                 'border-transparent hover:border-slate-300 dark:hover:border-slate-600': !generatedImages.some(img => img.id === image.id)
               }"
               @click="showImageInCanvas(image)"
@@ -222,14 +222,14 @@
         <Transition name="fade">
           <div 
             v-if="isDragging"
-            class="absolute inset-0 z-50 bg-violet-500/10 backdrop-blur-md border-2 border-dashed border-violet-500 rounded-2xl m-3 flex items-center justify-center"
+            class="absolute inset-0 z-50 bg-primary/10 backdrop-blur-md border-2 border-dashed border-primary rounded-2xl m-3 flex items-center justify-center"
           >
             <div class="text-center">
-              <div class="w-16 h-16 mx-auto mb-3 bg-violet-500/20 rounded-2xl flex items-center justify-center">
-                <Icon name="add_photo_alternate" :size="32" class="text-violet-500" />
+              <div class="w-16 h-16 mx-auto mb-3 bg-primary/20 rounded-2xl flex items-center justify-center">
+                <Icon name="add_photo_alternate" :size="32" class="text-primary" />
               </div>
-              <p class="text-violet-600 dark:text-violet-400 font-semibold">Solte as imagens aqui</p>
-              <p class="text-xs text-violet-400 mt-1">Máximo {{ MAX_ATTACHED_IMAGES }} imagens</p>
+              <p class="text-primary font-semibold">Solte as imagens aqui</p>
+              <p class="text-xs text-primary/80 mt-1">Máximo {{ MAX_ATTACHED_IMAGES }} imagens</p>
             </div>
           </div>
         </Transition>
@@ -237,7 +237,7 @@
         <!-- Header do chat -->
         <header class="h-14 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 bg-slate-50/50 dark:bg-slate-800/50">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Icon name="auto_awesome" :size="16" class="text-white" />
             </div>
             <div>
@@ -250,14 +250,14 @@
           </div>
           <div class="flex items-center gap-1">
             <button 
-              class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all text-slate-400 hover:text-violet-500"
+              class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all text-slate-400 hover:text-primary"
               title="Meus projetos"
               @click="showHistory = !showHistory"
             >
               <Icon name="folder" :size="20" />
             </button>
             <button 
-              class="p-2 hover:bg-violet-100 dark:hover:bg-violet-900/30 rounded-lg transition-all text-slate-400 hover:text-violet-500"
+              class="p-2 hover:bg-primary/10 rounded-lg transition-all text-slate-400 hover:text-primary"
               title="Novo projeto"
               @click="handleNewProject"
             >
@@ -275,7 +275,7 @@
           >
             <!-- Avatar e saudação -->
             <div class="flex flex-col items-center mb-6 pt-4">
-              <div class="w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-violet-500/30">
+              <div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-primary/30">
                 <span class="text-white font-bold text-xl italic">EI</span>
               </div>
               <h2 class="text-xl font-bold text-slate-900 dark:text-white">Olá! Sou o EditorIA</h2>
@@ -290,23 +290,23 @@
               <button
                 v-for="suggestion in suggestions"
                 :key="suggestion.title"
-                class="w-full flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-violet-50 dark:hover:bg-violet-900/20 border border-slate-100 dark:border-slate-700 hover:border-violet-200 dark:hover:border-violet-800 rounded-xl transition-all text-left group"
+                class="w-full flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 hover:bg-primary/10 border border-slate-100 dark:border-slate-700 hover:border-primary/30 rounded-xl transition-all text-left group"
                 @click="handleSuggestionClick(suggestion.prompt)"
               >
-                <div class="w-12 h-12 rounded-xl overflow-hidden bg-gradient-to-br flex-shrink-0 shadow-md" :class="suggestion.gradient">
+                <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 shadow-md bg-primary" :class="suggestion.bgClass">
                   <div class="w-full h-full flex items-center justify-center">
                     <Icon :name="suggestion.icon" :size="22" class="text-white" />
                   </div>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-semibold text-slate-800 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors text-sm">
+                  <p class="font-semibold text-slate-800 dark:text-white group-hover:text-primary transition-colors text-sm">
                     {{ suggestion.title }}
                   </p>
                   <p class="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
                     {{ suggestion.description }}
                   </p>
                 </div>
-                <Icon name="arrow_forward" :size="18" class="text-slate-300 group-hover:text-violet-500 group-hover:translate-x-1 transition-all" />
+                <Icon name="arrow_forward" :size="18" class="text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
               </button>
             </div>
 
@@ -314,7 +314,7 @@
             <div class="mt-auto pt-6">
               <button 
                 v-if="userProjects.length > 0"
-                class="w-full flex items-center justify-center gap-2 text-sm text-slate-400 hover:text-violet-500 py-2 border border-dashed border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-700 rounded-xl transition-all"
+                class="w-full flex items-center justify-center gap-2 text-sm text-slate-400 hover:text-primary py-2 border border-dashed border-slate-200 dark:border-slate-700 hover:border-primary/50 rounded-xl transition-all"
                 @click="showHistory = true"
               >
                 <Icon name="folder" :size="18" />
@@ -338,7 +338,7 @@
                     <div 
                       v-for="(img, idx) in message.attachedImages" 
                       :key="idx"
-                      class="relative w-14 h-14 rounded-xl overflow-hidden ring-2 ring-violet-400 shadow-md"
+                      class="relative w-14 h-14 rounded-xl overflow-hidden ring-2 ring-primary/80 shadow-md"
                     >
                       <img :src="typeof img === 'string' ? img : img.url" class="w-full h-full object-cover" />
                       <span v-if="typeof img === 'object' && img.role" class="absolute bottom-0 left-0 right-0 text-[9px] py-0.5 text-center text-white bg-black/60">
@@ -347,7 +347,7 @@
                     </div>
                   </div>
                   <!-- Texto da mensagem -->
-                  <div class="bg-gradient-to-br from-violet-500 to-purple-600 text-white px-4 py-3 rounded-2xl rounded-br-md shadow-lg shadow-violet-500/20">
+                  <div class="bg-primary text-white px-4 py-3 rounded-2xl rounded-br-md shadow-lg shadow-primary/20">
                     <p class="text-sm leading-relaxed">{{ message.content }}</p>
                   </div>
                 </div>
@@ -356,7 +356,7 @@
               <!-- Mensagem do assistente -->
               <div v-else class="space-y-2">
                 <div class="flex items-start gap-3">
-                  <div class="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-violet-500/20">
+                  <div class="w-8 h-8 bg-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-primary/20">
                     <Icon name="auto_awesome" :size="16" class="text-white" />
                   </div>
                   <div class="flex-1 min-w-0">
@@ -364,9 +364,9 @@
                     <div v-if="message.isLoading" class="bg-slate-50 dark:bg-slate-800 rounded-2xl rounded-tl-md px-4 py-3">
                       <div class="flex items-center gap-3">
                         <div class="flex gap-1">
-                          <span class="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
-                          <span class="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
-                          <span class="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                          <span class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                          <span class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                          <span class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 300ms"></span>
                         </div>
                         <span class="text-sm text-slate-500">Criando sua imagem...</span>
                       </div>
@@ -437,8 +437,8 @@
             <div v-if="attachedImages.length > 0" class="mb-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
-                  <div class="w-6 h-6 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center">
-                    <Icon name="image" :size="14" class="text-violet-500" />
+                  <div class="w-6 h-6 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Icon name="image" :size="14" class="text-primary" />
                   </div>
                   <span class="text-xs font-medium text-slate-600 dark:text-slate-400">
                     {{ attachedImages.length }} {{ attachedImages.length === 1 ? 'imagem anexada' : 'imagens anexadas' }}
@@ -462,7 +462,7 @@
                   <img 
                     :src="item.url" 
                     class="w-14 h-14 object-cover rounded-xl ring-2 transition-all shadow-md"
-                    :class="item.role === 'inspiration' ? 'ring-amber-400 dark:ring-amber-600' : 'ring-violet-200 dark:ring-violet-800 group-hover:ring-violet-500'"
+                    :class="item.role === 'inspiration' ? 'ring-amber-400 dark:ring-amber-600' : 'ring-primary/30 group-hover:ring-primary'"
                   />
                   <!-- Estrela: marcar como inspiração (aparece no hover, clique alterna) -->
                   <button 
@@ -492,9 +492,9 @@
                 <!-- Label para adicionar mais imagens -->
                 <label 
                   v-if="attachedImages.length < MAX_ATTACHED_IMAGES"
-                  class="w-14 h-14 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl flex items-center justify-center hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all cursor-pointer group"
+                  class="w-14 h-14 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all cursor-pointer group"
                 >
-                  <Icon name="add" :size="20" class="text-slate-400 group-hover:text-violet-500 group-hover:scale-110 transition-all" />
+                  <Icon name="add" :size="20" class="text-slate-400 group-hover:text-primary group-hover:scale-110 transition-all" />
                   <input 
                     type="file" 
                     accept="image/*"
@@ -507,7 +507,7 @@
             </div>
           </Transition>
 
-          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg shadow-slate-200/50 dark:shadow-none focus-within:ring-2 focus-within:ring-violet-500/30 focus-within:border-violet-400 transition-all">
+          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg shadow-slate-200/50 dark:shadow-none focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary/50 transition-all">
             <textarea
               ref="inputRef"
               v-model="prompt"
@@ -524,15 +524,15 @@
                 <label 
                   class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all relative cursor-pointer group"
                   :class="{ 
-                    'text-violet-500': attachedImages.length > 0,
+                    'text-primary': attachedImages.length > 0,
                     'opacity-50 cursor-not-allowed': isGenerating || attachedImages.length >= MAX_ATTACHED_IMAGES
                   }"
                   :title="attachedImages.length >= MAX_ATTACHED_IMAGES ? 'Limite de imagens atingido' : 'Anexar imagem de referência'"
                 >
-                  <Icon name="add_photo_alternate" :size="20" :class="attachedImages.length > 0 ? 'text-violet-500' : 'text-slate-400 group-hover:text-violet-500'" class="transition-colors" />
+                  <Icon name="add_photo_alternate" :size="20" :class="attachedImages.length > 0 ? 'text-primary' : 'text-slate-400 group-hover:text-primary'" class="transition-colors" />
                   <span 
                     v-if="attachedImages.length > 0" 
-                    class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-violet-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold"
+                    class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-white text-[10px] rounded-full flex items-center justify-center font-bold"
                   >
                     {{ attachedImages.length }}
                   </span>
@@ -552,7 +552,7 @@
                 <button
                   class="w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-md"
                   :class="{
-                    'bg-gradient-to-br from-violet-500 to-purple-600 text-white hover:shadow-lg hover:shadow-violet-500/30 hover:scale-105': canSubmit,
+                    'bg-primary text-white hover:shadow-lg hover:shadow-primary/30 hover:scale-105': canSubmit,
                     'bg-slate-100 dark:bg-slate-700 text-slate-400 cursor-not-allowed': !canSubmit
                   }"
                   :disabled="!canSubmit"
@@ -601,7 +601,7 @@
                   :key="project.id"
                   class="w-full text-left p-3 rounded-xl transition-colors flex gap-3 disabled:opacity-60"
                   :class="{
-                    'bg-violet-50 dark:bg-violet-900/30 border border-violet-200 dark:border-violet-800': project.id === chatStore.currentProjectId,
+                    'bg-primary/10 border border-primary/30': project.id === chatStore.currentProjectId,
                     'hover:bg-slate-50 dark:hover:bg-slate-800': project.id !== chatStore.currentProjectId
                   }"
                   :disabled="loadingProject"
@@ -628,7 +628,7 @@
             <!-- Botão novo projeto -->
             <div class="p-4 border-t border-slate-200 dark:border-slate-800">
               <button
-                class="w-full py-2 px-4 bg-violet-500 text-white rounded-xl hover:bg-violet-600 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                class="w-full py-2 px-4 bg-primary text-white rounded-xl hover:opacity-90 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                 @click="handleNewProject(); showHistory = false"
               >
                 <Icon name="add" :size="18" />
@@ -715,21 +715,21 @@ const suggestions = [
     description: 'Crie ilustrações únicas com IA',
     prompt: 'Crie uma ilustração artística de uma cidade futurista ao pôr do sol, estilo anime, cores vibrantes',
     icon: 'palette',
-    gradient: 'from-pink-500 to-rose-500'
+    bgClass: 'bg-primary'
   },
   { 
     title: 'Ideias de Design', 
     description: 'Peça sugestões criativas à IA',
     prompt: 'Me dê 5 ideias criativas para um logo de uma startup de tecnologia sustentável',
     icon: 'lightbulb',
-    gradient: 'from-violet-500 to-purple-500'
+    bgClass: 'bg-primary'
   },
   { 
     title: 'Criar Logo', 
     description: 'Gere logos e identidades visuais',
     prompt: 'Crie um logo minimalista e moderno para uma startup de tecnologia, estilo clean',
     icon: 'brush',
-    gradient: 'from-amber-500 to-orange-500'
+    bgClass: 'bg-amber-500'
   },
 ]
 

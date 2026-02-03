@@ -8,7 +8,7 @@
       >
         <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
           <!-- Header -->
-          <div class="p-6 bg-gradient-to-r from-violet-500 to-purple-600 text-white">
+          <div class="p-6 bg-primary text-white">
             <div class="flex items-center justify-between">
               <h2 class="text-xl font-bold">Seus Créditos</h2>
               <button 
@@ -55,17 +55,17 @@
                   :key="pack.name"
                   class="relative flex items-center justify-between p-4 rounded-xl transition-all group"
                   :class="pack.popular 
-                    ? 'border-2 border-violet-500 bg-violet-50 dark:bg-violet-900/20 hover:bg-violet-100 dark:hover:bg-violet-900/30' 
-                    : 'border border-slate-200 dark:border-slate-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-violet-900/20'"
+                    ? 'border-2 border-primary bg-primary/10 hover:bg-primary/20' 
+                    : 'border border-slate-200 dark:border-slate-700 hover:border-primary/50 hover:bg-primary/10'"
                 >
                   <span 
                     v-if="pack.popular" 
-                    class="absolute -top-2 left-3 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded-full bg-violet-500 text-white shadow-sm"
+                    class="absolute -top-2 left-3 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded-full bg-primary text-white shadow-sm"
                   >
                     Mais popular
                   </span>
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                    <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center">
                       <Icon name="bolt" :size="20" class="text-white" />
                     </div>
                     <div class="text-left">
@@ -75,7 +75,7 @@
                     </div>
                   </div>
                   <div class="text-right">
-                    <p class="font-bold text-violet-600 dark:text-violet-400">R$ {{ pack.price.toFixed(2) }}</p>
+                    <p class="font-bold text-primary">R$ {{ pack.price.toFixed(2) }}</p>
                     <p class="text-xs text-slate-500">R$ {{ (pack.price / pack.credits).toFixed(2) }}/crédito</p>
                   </div>
                 </button>

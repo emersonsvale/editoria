@@ -24,9 +24,9 @@
 
     <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
       <section class="text-center mb-16">
-        <div class="inline-flex items-center gap-2 bg-violet-50 dark:bg-violet-900/20 px-3 py-1 rounded-full border border-violet-100 dark:border-violet-800/30 mb-6 group cursor-pointer">
-          <span class="bg-gradient-to-r from-violet-500 to-purple-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">IA</span>
-          <span class="text-xs font-medium text-violet-800 dark:text-violet-300">Geração de imagens com IA avançada!</span>
+        <div class="inline-flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/30 mb-6 group cursor-pointer">
+          <span class="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded">IA</span>
+          <span class="text-xs font-medium text-primary">Geração de imagens com IA avançada!</span>
         </div>
         <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight flex items-center justify-center gap-3">
           Crie imagens incríveis com EditorIA
@@ -34,9 +34,9 @@
         <p class="text-slate-500 dark:text-slate-400 mb-10">Descreva sua ideia e a IA gera imagens impressionantes em segundos</p>
         <div class="max-w-2xl mx-auto relative group">
           <NuxtLink to="/editor" class="block" @click="handleCreationLink($event, '/editor')">
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-xl shadow-slate-200/50 dark:shadow-none hover:ring-2 ring-violet-500/20 transition-all cursor-pointer">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-xl shadow-slate-200/50 dark:shadow-none hover:ring-2 ring-primary/20 transition-all cursor-pointer">
               <div class="flex items-center gap-3 text-slate-400 h-12">
-                <Icon name="auto_awesome" :size="20" class="text-violet-500" />
+                <Icon name="auto_awesome" :size="20" class="text-primary" />
                 <span>Descreva a imagem que você quer criar...</span>
               </div>
               <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-50 dark:border-slate-800/50">
@@ -45,27 +45,27 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="text-xs text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Enter para criar</span>
-                  <div class="bg-gradient-to-r from-violet-500 to-purple-600 text-white p-2 rounded-xl flex items-center justify-center ml-2">
+                  <div class="bg-primary text-white p-2 rounded-xl flex items-center justify-center ml-2">
                     <Icon name="north" />
                   </div>
                 </div>
               </div>
             </div>
           </NuxtLink>
-          <div class="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-br from-violet-500 to-purple-600 border-2 border-white rounded-full flex items-center justify-center">
+          <div class="absolute -top-2 -right-2 w-5 h-5 bg-primary border-2 border-white rounded-full flex items-center justify-center">
             <Icon name="auto_awesome" :size="10" class="text-white" />
           </div>
         </div>
         <div class="flex flex-wrap justify-center gap-3 mt-8">
           <button 
-            class="px-4 py-2 bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-800/50 rounded-full text-sm font-medium text-violet-700 dark:text-violet-400 flex items-center gap-2 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-colors"
+            class="px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm font-medium text-primary flex items-center gap-2 hover:bg-primary/20 transition-colors"
             @click="goTo('/editor')"
           >
             <Icon name="auto_awesome" :size="16" />
             Gerar imagem
           </button>
           <button 
-            class="px-4 py-2 bg-gradient-to-r from-pink-500/10 to-blue-500/10 border border-pink-200 dark:border-pink-800/50 rounded-full text-sm font-medium text-pink-700 dark:text-pink-400 flex items-center gap-2 hover:from-pink-500/20 hover:to-blue-500/20 transition-colors"
+            class="px-4 py-2 bg-primary/10 border border-primary/30 rounded-full text-sm font-medium text-primary flex items-center gap-2 hover:bg-primary/20 transition-colors"
             @click="goTo('/carousel')"
           >
             <Icon name="view_carousel" :size="16" />
@@ -115,7 +115,7 @@
           <h2 class="text-xl font-bold">Meus Projetos</h2>
           <button 
             @click="handleNewProject"
-            class="text-sm font-medium text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-1"
+            class="text-sm font-medium text-primary hover:underline flex items-center gap-1"
           >
             <Icon name="add" :size="16" />
             Novo projeto
@@ -130,8 +130,8 @@
             class="card-item aspect-square group relative overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800 cursor-pointer"
             @click="handleNewProject"
           >
-            <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-violet-500/10 to-purple-500/10 dark:from-violet-900/20 dark:to-purple-900/20 border-2 border-dashed border-violet-200/60 dark:border-violet-800/60 group-hover:scale-105 transition-transform duration-500">
-              <Icon name="add" :size="40" class="text-violet-400 dark:text-violet-500 mb-2" />
+            <div class="w-full h-full flex flex-col items-center justify-center bg-primary/10 dark:bg-primary/20 border-2 border-dashed border-primary/30 dark:border-primary/40 group-hover:scale-105 transition-transform duration-500">
+              <Icon name="add" :size="40" class="text-primary mb-2" />
               <span class="text-xs text-slate-500 dark:text-slate-400">Novo projeto</span>
             </div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end text-white rounded-2xl">
@@ -157,9 +157,9 @@
             />
             <div 
               v-else 
-              class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-violet-500/10 to-purple-500/10 dark:from-violet-900/20 dark:to-purple-900/20"
+              class="w-full h-full flex flex-col items-center justify-center bg-primary/10 dark:bg-primary/20"
             >
-              <Icon name="auto_awesome" :size="32" class="text-violet-400 dark:text-violet-500 mb-2" />
+              <Icon name="auto_awesome" :size="32" class="text-primary mb-2" />
               <span class="text-xs text-slate-400">Sem imagens</span>
             </div>
             <!-- Ícone de exclusão: visível no hover, evita abrir o projeto ao clicar -->
@@ -188,12 +188,12 @@
       <section class="mb-16">
         <h2 class="text-xl font-bold mb-6">Comece com um template</h2>
         <div class="cards-grid">
-          <NuxtLink to="/editor" class="card-item aspect-square relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500/10 to-purple-500/10 dark:from-violet-900/20 dark:to-purple-900/20 border-2 border-dashed border-violet-200 dark:border-violet-800 flex flex-col items-center justify-center cursor-pointer hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-colors group" @click="handleCreationLink($event, '/editor')">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
-            <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white mb-3 group-hover:scale-110 transition-transform">
+          <NuxtLink to="/editor" class="card-item aspect-square relative overflow-hidden rounded-2xl bg-primary/10 dark:bg-primary/20 border-2 border-dashed border-primary/30 dark:border-primary/40 flex flex-col items-center justify-center cursor-pointer hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors group" @click="handleCreationLink($event, '/editor')">
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+            <div class="relative w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white mb-3 group-hover:scale-110 transition-transform">
               <Icon name="auto_awesome" :size="24" />
             </div>
-            <span class="relative text-sm font-semibold text-violet-600 dark:text-violet-400">Criar do zero</span>
+            <span class="relative text-sm font-semibold text-primary">Criar do zero</span>
           </NuxtLink>
           <div 
             v-for="template in creationTemplates" 
@@ -227,7 +227,7 @@
               :key="category"
               class="px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-colors"
               :class="selectedCategory === category 
-                ? 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400' 
+                ? 'bg-primary/10 text-primary' 
                 : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900'"
               @click="filterByCategory(category)"
             >
@@ -277,7 +277,7 @@
     <!-- Botão flutuante para criar -->
     <NuxtLink 
       to="/editor" 
-      class="fixed bottom-6 right-6 px-5 py-3 rounded-full bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/30 flex items-center gap-2 z-50 hover:scale-105 hover:shadow-xl hover:shadow-violet-500/40 transition-all font-medium"
+      class="fixed bottom-6 right-6 px-5 py-3 rounded-full bg-primary text-white shadow-lg shadow-primary/30 flex items-center gap-2 z-50 hover:scale-105 hover:shadow-xl hover:opacity-90 transition-all font-medium"
       @click="handleCreationLink($event, '/editor')"
     >
       <Icon name="auto_awesome" :size="20" />
@@ -466,7 +466,7 @@ const creationTemplates = [
     id: 'logo',
     title: 'Logo tech startup',
     image: '/editoria-img-1769655438832-0.png',
-    prompt: 'Logo minimalista e moderno para startup de tecnologia, design clean, cores gradiente violeta e roxo, fundo branco, vetorial',
+    prompt: 'Logo minimalista e moderno para startup de tecnologia, design clean, verde escuro estilo Supabase, fundo branco, vetorial',
     size: '1:1' as const
   },
   {
