@@ -147,6 +147,13 @@
                   <div class="flex items-center gap-2">
                     <button 
                       class="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl transition-all hover:scale-110"
+                      title="Usar como inspiração"
+                      @click.stop="addAsAttachment(image, 'inspiration')"
+                    >
+                      <Icon name="star" :size="18" class="text-white" />
+                    </button>
+                    <button 
+                      class="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl transition-all hover:scale-110"
                       title="Download"
                       @click.stop="handleDownload(image)"
                     >
@@ -183,7 +190,7 @@
             <div 
               v-for="image in allImages" 
               :key="image.id"
-              class="w-14 h-14 rounded-xl overflow-hidden cursor-pointer flex-shrink-0 border-2 transition-all hover:scale-105"
+              class="relative w-14 h-14 rounded-xl overflow-hidden cursor-pointer flex-shrink-0 border-2 transition-all hover:scale-105 group/thumb"
               :class="{
                 'border-violet-500 ring-2 ring-violet-500/20': generatedImages.some(img => img.id === image.id),
                 'border-transparent hover:border-slate-300 dark:hover:border-slate-600': !generatedImages.some(img => img.id === image.id)
@@ -191,6 +198,14 @@
               @click="showImageInCanvas(image)"
             >
               <img :src="image.url" class="w-full h-full object-cover" />
+              <button 
+                type="button"
+                class="absolute inset-0 bg-black/50 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center rounded-xl"
+                title="Usar como inspiração"
+                @click.stop="addAsAttachment(image, 'inspiration')"
+              >
+                <Icon name="star" :size="18" class="text-amber-400" />
+              </button>
             </div>
           </div>
         </Transition>
@@ -295,15 +310,15 @@
               </button>
             </div>
 
-            <!-- Link para projetos -->
+            <!-- Link para projetos (do usuário logado no Supabase) -->
             <div class="mt-auto pt-6">
               <button 
-                v-if="chatStore.sortedProjects.length > 1"
+                v-if="userProjects.length > 0"
                 class="w-full flex items-center justify-center gap-2 text-sm text-slate-400 hover:text-violet-500 py-2 border border-dashed border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-700 rounded-xl transition-all"
                 @click="showHistory = true"
               >
                 <Icon name="folder" :size="18" />
-                <span>Ver meus {{ chatStore.sortedProjects.length }} projetos</span>
+                <span>Ver meus {{ userProjects.length }} projetos</span>
               </button>
             </div>
           </div>
@@ -323,9 +338,12 @@
                     <div 
                       v-for="(img, idx) in message.attachedImages" 
                       :key="idx"
-                      class="w-14 h-14 rounded-xl overflow-hidden ring-2 ring-violet-400 shadow-md"
+                      class="relative w-14 h-14 rounded-xl overflow-hidden ring-2 ring-violet-400 shadow-md"
                     >
-                      <img :src="img" class="w-full h-full object-cover" />
+                      <img :src="typeof img === 'string' ? img : img.url" class="w-full h-full object-cover" />
+                      <span v-if="typeof img === 'object' && img.role" class="absolute bottom-0 left-0 right-0 text-[9px] py-0.5 text-center text-white bg-black/60">
+                        {{ img.role === 'inspiration' ? 'Inspiração' : 'Personagem' }}
+                      </span>
                     </div>
                   </div>
                   <!-- Texto da mensagem -->
@@ -385,11 +403,22 @@
                           @click="showImageInCanvas(image)"
                         >
                           <img :src="image.url" class="w-full h-full object-cover" />
-                          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
-                            <span class="text-white text-xs font-medium flex items-center gap-1 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                              <Icon name="fullscreen" :size="14" />
-                              Ver no canvas
-                            </span>
+                          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-end gap-2 pb-3 px-2">
+                            <div class="flex items-center gap-1.5">
+                              <button 
+                                type="button"
+                                class="text-white text-xs font-medium flex items-center gap-1 bg-white/20 hover:bg-amber-500/80 backdrop-blur-sm px-2.5 py-1.5 rounded-full transition-colors"
+                                title="Usar como inspiração"
+                                @click.stop="addAsAttachment(image, 'inspiration')"
+                              >
+                                <Icon name="star" :size="12" />
+                                Inspiração
+                              </button>
+                              <span class="text-white text-xs font-medium flex items-center gap-1 bg-white/20 backdrop-blur-sm px-2.5 py-1.5 rounded-full">
+                                <Icon name="fullscreen" :size="12" />
+                                Canvas
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -414,6 +443,7 @@
                   <span class="text-xs font-medium text-slate-600 dark:text-slate-400">
                     {{ attachedImages.length }} {{ attachedImages.length === 1 ? 'imagem anexada' : 'imagens anexadas' }}
                   </span>
+                  <span v-if="attachedImages.length >= 2" class="text-[10px] text-slate-400">· Estrela na miniatura = inspiração</span>
                 </div>
                 <button 
                   class="text-xs text-slate-400 hover:text-red-500 transition-colors flex items-center gap-1"
@@ -425,20 +455,39 @@
               </div>
               <div class="flex gap-2 flex-wrap">
                 <div 
-                  v-for="(img, index) in attachedImages" 
+                  v-for="(item, index) in attachedImages" 
                   :key="index"
-                  class="relative group"
+                  class="relative group flex flex-col items-center gap-1"
                 >
                   <img 
-                    :src="img" 
-                    class="w-14 h-14 object-cover rounded-xl ring-2 ring-violet-200 dark:ring-violet-800 group-hover:ring-violet-500 transition-all shadow-md"
+                    :src="item.url" 
+                    class="w-14 h-14 object-cover rounded-xl ring-2 transition-all shadow-md"
+                    :class="item.role === 'inspiration' ? 'ring-amber-400 dark:ring-amber-600' : 'ring-violet-200 dark:ring-violet-800 group-hover:ring-violet-500'"
                   />
+                  <!-- Estrela: marcar como inspiração (aparece no hover, clique alterna) -->
+                  <button 
+                    v-if="attachedImages.length >= 2"
+                    type="button"
+                    class="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-md z-10"
+                    :class="item.role === 'inspiration' 
+                      ? 'bg-amber-500 text-white ring-2 ring-amber-400' 
+                      : 'bg-white dark:bg-slate-700 text-slate-400 ring-1 ring-slate-200 dark:ring-slate-600 hover:bg-amber-100 dark:hover:bg-amber-900/30 hover:text-amber-600'"
+                    :title="item.role === 'inspiration' ? 'Inspiração (clique para desmarcar)' : 'Marcar como inspiração'"
+                    @click.stop="toggleInspiration(index)"
+                  >
+                    <Icon name="star" :size="12" :class="item.role === 'inspiration' ? 'fill-current' : ''" />
+                  </button>
                   <button 
                     class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-md"
-                    @click="removeAttachedImage(index)"
+                    title="Remover imagem"
+                    @click.stop="removeAttachedImage(index)"
                   >
                     <Icon name="close" :size="12" />
                   </button>
+                  <!-- Label curto abaixo quando há 2+ imagens -->
+                  <span v-if="attachedImages.length >= 2" class="text-[10px] text-slate-500 dark:text-slate-400">
+                    {{ item.role === 'inspiration' ? 'Inspiração' : 'Personagem' }}
+                  </span>
                 </div>
                 <!-- Label para adicionar mais imagens -->
                 <label 
@@ -543,32 +592,38 @@
               </button>
             </header>
             <div class="flex-1 overflow-y-auto p-4 space-y-2">
-              <button
-                v-for="project in chatStore.sortedProjects"
-                :key="project.id"
-                class="w-full text-left p-3 rounded-xl transition-colors flex gap-3"
-                :class="{
-                  'bg-violet-50 dark:bg-violet-900/30 border border-violet-200 dark:border-violet-800': project.id === chatStore.currentProjectId,
-                  'hover:bg-slate-50 dark:hover:bg-slate-800': project.id !== chatStore.currentProjectId
-                }"
-                @click="selectProject(project.id)"
-              >
-                <!-- Thumbnail -->
-                <div class="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 flex-shrink-0">
-                  <img 
-                    v-if="project.thumbnail" 
-                    :src="project.thumbnail" 
-                    class="w-full h-full object-cover"
-                  />
-                  <div v-else class="w-full h-full flex items-center justify-center">
-                    <Icon name="image" :size="20" class="text-slate-300 dark:text-slate-600" />
+              <div v-if="loadingProjects" class="flex items-center justify-center py-8 text-slate-400">
+                <Icon name="progress_activity" :size="24" class="animate-spin" />
+              </div>
+              <template v-else>
+                <button
+                  v-for="project in userProjects"
+                  :key="project.id"
+                  class="w-full text-left p-3 rounded-xl transition-colors flex gap-3 disabled:opacity-60"
+                  :class="{
+                    'bg-violet-50 dark:bg-violet-900/30 border border-violet-200 dark:border-violet-800': project.id === chatStore.currentProjectId,
+                    'hover:bg-slate-50 dark:hover:bg-slate-800': project.id !== chatStore.currentProjectId
+                  }"
+                  :disabled="loadingProject"
+                  @click="openProject(project.id)"
+                >
+                  <!-- Thumbnail -->
+                  <div class="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 flex-shrink-0">
+                    <img 
+                      v-if="project.thumbnail" 
+                      :src="project.thumbnail" 
+                      class="w-full h-full object-cover"
+                    />
+                    <div v-else class="w-full h-full flex items-center justify-center">
+                      <Icon name="image" :size="20" class="text-slate-300 dark:text-slate-600" />
+                    </div>
                   </div>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-medium text-sm truncate">{{ project.title }}</p>
-                  <p class="text-xs text-slate-400 mt-1">{{ formatDate(project.updatedAt) }}</p>
-                </div>
-              </button>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-medium text-sm truncate">{{ project.title }}</p>
+                    <p class="text-xs text-slate-400 mt-1">{{ formatDate(project.updatedAt) }}</p>
+                  </div>
+                </button>
+              </template>
             </div>
             <!-- Botão novo projeto -->
             <div class="p-4 border-t border-slate-200 dark:border-slate-800">
@@ -595,6 +650,7 @@
       @previous="navigateImage(-1)"
       @next="navigateImage(1)"
       @variation="handleVariation"
+      @use-as-inspiration="(img) => { addAsAttachment(img, 'inspiration') }"
     />
 
     <!-- Modal de configurações -->
@@ -605,6 +661,7 @@
       @close="showSettings = false"
       @save="handleSaveSettings"
       @clear-data="chatStore.clearAllData"
+      @open-credits="showSettings = false; showCreditsModal = true"
     />
 
     <!-- Modal de créditos -->
@@ -617,11 +674,13 @@
 </template>
 
 <script setup lang="ts">
-import type { GeneratedImage } from '~/stores/chat'
+definePageMeta({ layout: 'creation', middleware: 'auth-creation' })
+
+import type { GeneratedImage, AttachedImageItem } from '~/stores/chat'
 import type { ImageSize } from '~/composables/useNanobanana'
 import ImageModal from '~/components/chat/ImageModal.vue'
 import SettingsModal from '~/components/chat/SettingsModal.vue'
-import CreditsModal from '~/components/chat/CreditsModal.vue'
+import CreditsModal from '~/components/credits/CreditsModal.vue'
 
 useHead({
   title: 'EditorIA - Editor de Imagens com IA',
@@ -629,6 +688,7 @@ useHead({
 
 const chatStore = useChatStore()
 const nanobanana = useNanobanana()
+const { userProjects, fetchUserProjects, loadProjectAndOpen, loading: loadingProjects, loadingProject } = useUserProjects()
 
 // Estado
 const showSettings = ref(false)
@@ -641,7 +701,7 @@ const messagesContainer = ref<HTMLDivElement | null>(null)
 const inputRef = ref<HTMLTextAreaElement | null>(null)
 const fileInputRef = ref<HTMLInputElement | null>(null)
 const prompt = ref('')
-const attachedImages = ref<string[]>([]) // Suporte para múltiplas imagens
+const attachedImages = ref<AttachedImageItem[]>([]) // Imagens anexadas com role (inspiração / personagem)
 const zoom = ref(100)
 const isDragging = ref(false)
 
@@ -698,6 +758,10 @@ const canSubmit = computed(() => {
 
 const getInputPlaceholder = computed(() => {
   if (attachedImages.value.length > 0) return 'Descreva o que fazer com as imagens (editar, inspirar, reaproveitar...)'
+  // Sem mensagens: primeiro prompt será o nome do projeto
+  if (chatStore.currentMessages.length === 0) {
+    return 'Descreva sua ideia — será o nome do projeto'
+  }
   return 'Converse com a IA, peça ideias ou gere imagens...'
 })
 
@@ -705,17 +769,34 @@ const getInputPlaceholder = computed(() => {
 onMounted(async () => {
   chatStore.loadFromLocalStorage()
   await fetchCredits()
-  
+  await fetchUserProjects()
+
   // Adiciona listener para colar imagens
   document.addEventListener('paste', handlePaste)
   
-  // Verifica se há um prompt inicial (vindo de um template)
+  // Verifica se há prompt ou imagem anexada inicial (vindo da home: template ou inspiração)
   if (typeof window !== 'undefined') {
     const initialPrompt = sessionStorage.getItem('editoria_initial_prompt')
     if (initialPrompt) {
       prompt.value = initialPrompt
       sessionStorage.removeItem('editoria_initial_prompt')
-      // Foca no input e redimensiona
+    }
+    const initialAttached = sessionStorage.getItem('editoria_initial_attached_image')
+    if (initialAttached) {
+      try {
+        const parsed = JSON.parse(initialAttached) as Array<{ url: string; role: 'inspiration' | 'character' }>
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const valid = parsed
+            .filter((item) => item?.url && (item.role === 'inspiration' || item.role === 'character'))
+            .slice(0, MAX_ATTACHED_IMAGES)
+          attachedImages.value = valid.length ? valid : attachedImages.value
+        }
+        sessionStorage.removeItem('editoria_initial_attached_image')
+      } catch {
+        sessionStorage.removeItem('editoria_initial_attached_image')
+      }
+    }
+    if (initialPrompt || initialAttached) {
       nextTick(() => {
         inputRef.value?.focus()
         autoResize()
@@ -765,9 +846,25 @@ const handleKeydown = (e: KeyboardEvent) => {
   }
 }
 
-const handleNewProject = () => {
-  chatStore.createProject()
+const handleNewProject = async () => {
+  try {
+    const project = await createProjectInSupabase()
+    chatStore.setProjectFromSupabase(project)
+    await fetchUserProjects()
+  } catch {
+    chatStore.createProject()
+  }
   generatedImages.value = []
+}
+
+/** Abre um projeto: se já está na store, só seleciona; senão carrega do Supabase. */
+const openProject = (projectId: string) => {
+  if (chatStore.currentProjectId === projectId) {
+    selectProject(projectId)
+    showHistory.value = false
+    return
+  }
+  loadProjectAndOpen(projectId)
 }
 
 const selectProject = (projectId: string) => {
@@ -810,8 +907,32 @@ const handleSubmit = async () => {
     inputRef.value.style.height = 'auto'
   }
 
+  // Se não há projeto (ex.: usuário entrou direto no editor), criar no Supabase se logado
+  if (!chatStore.currentProjectId) {
+    try {
+      const project = await createProjectInSupabase()
+      chatStore.setProjectFromSupabase(project)
+    } catch {
+      chatStore.createProject()
+    }
+  }
+
   // Adiciona mensagem do usuário com as imagens anexadas
   chatStore.addUserMessage(currentPrompt, currentAttachedImages)
+
+  // Sincroniza mensagem do usuário no Supabase (projeto criado via API tem id UUID)
+  const projectId = chatStore.currentProjectId
+  if (projectId && isSupabaseProjectId(projectId)) {
+    syncMessageToSupabase(projectId, { role: 'user', content: currentPrompt }).catch((e) =>
+      console.error('Erro ao salvar mensagem do usuário:', e)
+    )
+    // Primeiro prompt = nome do projeto: atualiza título no Supabase
+    if (chatStore.currentMessages.length === 1) {
+      updateProjectTitleInSupabase(projectId, currentPrompt).catch((e) =>
+        console.error('Erro ao atualizar nome do projeto:', e)
+      )
+    }
+  }
 
   // Adiciona mensagem do assistente (loading)
   const assistantMessage = chatStore.addAssistantMessage(
@@ -823,18 +944,29 @@ const handleSubmit = async () => {
   isGenerating.value = true
 
   try {
-    // Monta histórico para contexto
-    const history = chatStore.currentMessages.slice(0, -1).map(msg => ({
-      role: msg.role as 'user' | 'assistant',
-      content: msg.content,
-      images: msg.images?.map(img => img.url)
-    }))
+    // Monta histórico para contexto (inclui imagens anexadas do usuário e roles)
+    const history = chatStore.currentMessages.slice(0, -1).map(msg => {
+      const isUser = msg.role === 'user'
+      const images = isUser
+        ? msg.attachedImages?.map((img): string => (typeof img === 'string' ? img : img.url))
+        : msg.images?.map(img => img.url)
+      const imageRoles = isUser && msg.attachedImages?.length && typeof msg.attachedImages[0] !== 'string'
+        ? (msg.attachedImages as AttachedImageItem[]).map(img => img.role)
+        : undefined
+      return {
+        role: msg.role as 'user' | 'assistant',
+        content: msg.content,
+        images,
+        imageRoles
+      }
+    })
 
-    // Usa o chat conversacional
+    // Usa o chat conversacional (envia roles para inspiração vs personagem)
     const response = await nanobanana.chat({
       message: currentPrompt,
       history,
-      attachedImages: currentAttachedImages,
+      attachedImages: currentAttachedImages.map(a => a.url),
+      attachedImageRoles: currentAttachedImages.map(a => a.role),
       imageSettings: {
         aspectRatio: chatStore.settings.defaultImageSize
       }
@@ -855,6 +987,15 @@ const handleSubmit = async () => {
       images: newImages.length > 0 ? newImages : undefined,
       isLoading: false
     })
+
+    // Sincroniza mensagem do assistente no Supabase (com imagens para upload no Storage)
+    if (projectId && isSupabaseProjectId(projectId)) {
+      syncMessageToSupabase(projectId, {
+        role: 'assistant',
+        content: response.text,
+        images: newImages.length > 0 ? newImages : undefined
+      }).catch((e) => console.error('Erro ao salvar mensagem do assistente:', e))
+    }
 
     // Se gerou imagens, mostra no canvas
     if (newImages.length > 0) {
@@ -903,8 +1044,16 @@ const handleDownload = (image: GeneratedImage) => {
 const handleVariation = (image: GeneratedImage) => {
   selectedImage.value = null
   prompt.value = `Crie uma variação desta imagem: ${image.prompt}`
-  attachedImages.value = [image.url]
+  attachedImages.value = [{ url: image.url, role: 'character' }]
   handleSubmit()
+}
+
+/** Adiciona uma imagem gerada como anexo (inspiração ou referência) para o próximo prompt */
+const addAsAttachment = (image: GeneratedImage, role: AttachedImageItem['role'] = 'inspiration') => {
+  if (attachedImages.value.length >= MAX_ATTACHED_IMAGES) return
+  attachedImages.value.push({ url: image.url, role })
+  selectedImage.value = null
+  nextTick(() => inputRef.value?.focus())
 }
 
 const navigateImage = (direction: number) => {
@@ -914,12 +1063,27 @@ const navigateImage = (direction: number) => {
   }
 }
 
+const setAttachedImageRole = (index: number, role: AttachedImageItem['role']) => {
+  if (index >= 0 && index < attachedImages.value.length) {
+    attachedImages.value[index] = { ...attachedImages.value[index], role }
+  }
+}
+
+/** Alterna entre inspiração e personagem (estrela na miniatura) */
+const toggleInspiration = (index: number) => {
+  if (index < 0 || index >= attachedImages.value.length) return
+  const current = attachedImages.value[index].role
+  attachedImages.value[index] = {
+    ...attachedImages.value[index],
+    role: current === 'inspiration' ? 'character' : 'inspiration'
+  }
+}
+
 const handleImageUpload = (e: Event) => {
   const target = e.target as HTMLInputElement
   const files = target.files
   
   if (files && files.length > 0) {
-    // Calcula quantas imagens ainda podem ser adicionadas
     const remainingSlots = MAX_ATTACHED_IMAGES - attachedImages.value.length
     const filesToProcess = Array.from(files).slice(0, remainingSlots)
     
@@ -928,7 +1092,7 @@ const handleImageUpload = (e: Event) => {
       reader.onload = (e) => {
         const result = e.target?.result as string
         if (result && attachedImages.value.length < MAX_ATTACHED_IMAGES) {
-          attachedImages.value.push(result)
+          attachedImages.value.push({ url: result, role: 'character' })
         }
       }
       reader.readAsDataURL(file)
@@ -991,10 +1155,7 @@ const handlePaste = (e: ClipboardEvent) => {
 }
 
 const processImageFiles = (files: File[]) => {
-  // Filtra apenas imagens
   const imageFiles = files.filter(file => file.type.startsWith('image/'))
-  
-  // Calcula quantas imagens ainda podem ser adicionadas
   const remainingSlots = MAX_ATTACHED_IMAGES - attachedImages.value.length
   const filesToProcess = imageFiles.slice(0, remainingSlots)
   
@@ -1003,7 +1164,7 @@ const processImageFiles = (files: File[]) => {
     reader.onload = (e) => {
       const result = e.target?.result as string
       if (result && attachedImages.value.length < MAX_ATTACHED_IMAGES) {
-        attachedImages.value.push(result)
+        attachedImages.value.push({ url: result, role: 'character' })
       }
     }
     reader.readAsDataURL(file)

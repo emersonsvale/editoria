@@ -1,19 +1,30 @@
 /**
  * API Endpoint: POST /api/chat
  * Chat conversacional com IA que pode responder texto e/ou gerar imagens
- * 
- * A IA entende o contexto e decide quando gerar imagens ou apenas responder
+ * Requer auth; deduz créditos quando gera imagens (1 por imagem)
  */
+import { getUserIdFromToken, deductUserCredit } from '~/server/utils/supabase'
+
+type AttachedImageRole = 'inspiration' | 'character'
 
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
-  images?: string[] // Data URLs de imagens
+  images?: string[]
+  imageRoles?: AttachedImageRole[]
 }
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const body = await readBody(event)
+
+  const userId = await getUserIdFromToken(event)
+  if (!userId) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Não autorizado. Faça login para usar o chat.'
+    })
+  }
 
   // Valida se a API Key está configurada
   if (!config.geminiApiKey) {
@@ -24,10 +35,12 @@ export default defineEventHandler(async (event) => {
   }
 
   // Valida o body
-  const { message, history, attachedImages, imageSettings } = body as {
+  const { message, history, attachedImages, attachedImageRoles, imageSettings } = body as {
     message: string
     history?: ChatMessage[]
     attachedImages?: string[]
+    /** Ordem: inspiração vs personagem para cada imagem anexada na mensagem atual */
+    attachedImageRoles?: AttachedImageRole[]
     imageSettings?: {
       aspectRatio?: string
       shouldGenerateImage?: boolean
@@ -96,23 +109,26 @@ Seja conciso e direto - não descreva imagens que você vai gerar, apenas gere-a
       const recentHistory = history.slice(-10)
       for (const msg of recentHistory) {
         const parts: Array<{ text?: string; inline_data?: { mime_type: string; data: string } }> = []
-        
+        const roles = msg.imageRoles
+
         if (msg.content) {
           parts.push({ text: msg.content })
-          // Guarda a última mensagem de texto do assistente
           if (msg.role === 'assistant') {
             lastAssistantMessage = msg.content
           }
         }
-        
-        // Adiciona imagens do histórico se houver
+
+        // Imagens do histórico: usuário (attached) ou assistente (geradas)
         if (msg.images && msg.images.length > 0) {
           hasImagesInHistory = true
-          // Guarda a última imagem gerada pelo assistente
           if (msg.role === 'assistant') {
             lastGeneratedImage = msg.images[msg.images.length - 1]
           }
-          
+          // Se for mensagem do usuário com roles, adiciona rótulos antes das imagens
+          if (msg.role === 'user' && roles && roles.length === msg.images.length) {
+            const labels = msg.images.map((_, i) => `Imagem ${i + 1} (${roles[i] === 'inspiration' ? 'INSPIRAÇÃO - estilo/cenário' : 'PERSONAGEM - sua foto'})`).join('. ')
+            parts.push({ text: `[${labels}]\n` })
+          }
           for (const img of msg.images) {
             if (img.startsWith('data:')) {
               const base64Data = img.replace(/^data:image\/\w+;base64,/, '')
@@ -123,7 +139,7 @@ Seja conciso e direto - não descreva imagens que você vai gerar, apenas gere-a
             }
           }
         }
-        
+
         contents.push({
           role: msg.role === 'user' ? 'user' : 'model',
           parts
@@ -149,38 +165,38 @@ Seja conciso e direto - não descreva imagens que você vai gerar, apenas gere-a
     
     // Prepara a mensagem com instruções extras se há imagens
     let enhancedMessage = message
-    
-    // Sempre indicar que há fotos anexadas quando houver
+
     if (effectiveAttachedImages.length > 0) {
       const imageCount = effectiveAttachedImages.length
       const imageText = imageCount === 1 ? '1 foto anexada' : `${imageCount} fotos anexadas`
       enhancedMessage = `${message}\n\n[${imageText} para você analisar/usar na geração]`
     }
-    
-    // Detecta palavras que indicam inspiração/referência no texto do usuário
-    const lowerMessage = message.toLowerCase()
-    const hasInspirationKeyword = ['inspiração', 'inspiracao', 'inspirar', 'inspire', 'referência', 'referencia', 
-      'estilo', 'como essa', 'como esta', 'igual a', 'parecido', 'baseado', 'no estilo'].some(k => lowerMessage.includes(k))
-    const hasSelfKeyword = ['minha foto', 'meu rosto', 'minha cara', 'foto minha', 'eu na', 'me coloque', 'me coloca', 
-      'comigo', 'minha imagem', 'meu cabelo', 'meus olhos'].some(k => lowerMessage.includes(k))
-    
-    // Se tem 2 imagens e o usuário menciona inspiração/sua foto, adiciona instrução clara
-    if (effectiveAttachedImages.length === 2 && (hasInspirationKeyword || hasSelfKeyword)) {
+
+    // Quando o usuário marcou explicitamente inspiração vs personagem, instrução clara para a IA
+    const roles = attachedImageRoles && attachedImageRoles.length === effectiveAttachedImages.length
+      ? attachedImageRoles
+      : null
+    if (effectiveAttachedImages.length >= 2 && roles) {
+      const inspirationIndices = roles.map((r, i) => r === 'inspiration' ? i + 1 : null).filter((i): i is number => i !== null)
+      const characterIndices = roles.map((r, i) => r === 'character' ? i + 1 : null).filter((i): i is number => i !== null)
+      const inspirationList = inspirationIndices.length ? `Imagem(ns) ${inspirationIndices.join(', ')}` : ''
+      const characterList = characterIndices.length ? `Imagem(ns) ${characterIndices.join(', ')}` : ''
+      // Ordem explícita: "a 1ª imagem que você verá é X, a 2ª é Y" para o modelo associar às parts seguintes
+      const orderLines = roles.map((r, i) => `Imagem ${i + 1} (a ${i + 1}ª que você verá) = ${r === 'inspiration' ? 'INSPIRAÇÃO (estilo/cenário)' : 'PERSONAGEM (foto da pessoa)'}`).join('\n')
       enhancedMessage = `${message}
 
-[2 fotos anexadas para você usar na geração]
+[INSTRUÇÕES OBRIGATÓRIAS - o usuário marcou na interface qual imagem é inspiração e qual é personagem]
+${orderLines}
 
-INSTRUÇÕES IMPORTANTES PARA ESTA GERAÇÃO:
-- Você está recebendo 2 imagens: a primeira é minha FOTO PESSOAL, a segunda é a INSPIRAÇÃO de estilo/pose
-- Use meu ROSTO e IDENTIDADE da primeira imagem
-- Aplique o ESTILO, POSE e CENÁRIO da segunda imagem (inspiração)
-- O resultado deve ser EU naquele estilo/cenário, NÃO uma recriação da inspiração`
+- PERSONAGEM: use como BASE. Preserve rosto e identidade da pessoa.
+- INSPIRAÇÃO: use só como REFERÊNCIA de estilo, pose e cenário.
+- Resultado: a PESSOA do personagem na cena/estilo da inspiração. NUNCA recrie apenas a inspiração.`
     }
-    
+
     // Adiciona texto
     userParts.push({ text: enhancedMessage })
-    
-    // Adiciona imagens anexadas pelo usuário (ou a última imagem gerada se for ajuste)
+
+    // Adiciona imagens anexadas (na mesma ordem do enhancedMessage: 1ª imagem = index 0, 2ª = index 1, etc.)
     if (effectiveAttachedImages.length > 0) {
       for (const img of effectiveAttachedImages) {
         if (img.startsWith('data:')) {
@@ -212,11 +228,8 @@ INSTRUÇÕES IMPORTANTES PARA ESTA GERAÇÃO:
       }
     }
 
-    // Chama a API do Gemini
-    // Usa modelo diferente dependendo se vai gerar imagem ou não
-    // - gemini-2.0-flash: para chat de texto (rápido e eficiente)
-    // - gemini-2.5-flash-image: para geração de imagens (Nano Banana)
-    const model = wantsImage ? 'gemini-2.5-flash-image' : 'gemini-2.0-flash'
+    // Chama a API do Gemini (modelos configuráveis via NUXT_GEMINI_CHAT_MODEL / NUXT_GEMINI_IMAGE_MODEL)
+    const model = wantsImage ? config.geminiImageModel : config.geminiChatModel
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.geminiApiKey}`
 
     let response: any
@@ -295,8 +308,19 @@ INSTRUÇÕES IMPORTANTES PARA ESTA GERAÇÃO:
       })
     }
 
-    // Calcula créditos usados (apenas se gerou imagens)
-    const creditsUsed = responseImages.length > 0 ? responseImages.length : 0
+    // Deduz créditos quando gera imagens (1 por imagem)
+    const creditsUsed = responseImages.length
+    if (creditsUsed > 0) {
+      for (let i = 0; i < creditsUsed; i++) {
+        const ok = await deductUserCredit(userId)
+        if (!ok) {
+          throw createError({
+            statusCode: 402,
+            statusMessage: 'Créditos insuficientes. Adquira mais créditos para continuar.'
+          })
+        }
+      }
+    }
 
     return {
       success: true,

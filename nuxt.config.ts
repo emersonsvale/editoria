@@ -6,12 +6,19 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Variáveis PRIVADAS (apenas servidor) - NÃO expostas ao cliente
     geminiApiKey: '',
+    /** Modelo para chat/texto (ex: gemini-2.0-flash, gemini-2.5-flash) */
+    geminiChatModel: 'gemini-2.0-flash',
+    /** Modelo para geração de imagens (ex: gemini-2.5-flash-image, gemini-3-pro-image-preview) */
+    geminiImageModel: 'gemini-2.5-flash-image',
     creditsPerImage: 1,
     unsplashAccessKey: '',
+    supabaseServiceRoleKey: '',
     
     public: {
       // Variáveis públicas (expostas ao cliente)
-      appName: 'EditorIA'
+      appName: 'EditorIA',
+      supabaseUrl: '',
+      supabaseAnonKey: ''
     }
   }
 })

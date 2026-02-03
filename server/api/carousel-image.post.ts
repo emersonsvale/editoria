@@ -78,7 +78,7 @@ Requirements:
 Important: Create a visually cohesive image that would work well in a carousel series.${hasInspirationImages ? ' MATCH the style of the provided reference images.' : ''}`
 
   try {
-    const model = 'gemini-2.5-flash-image'
+    const model = config.geminiImageModel || 'gemini-2.5-flash-image'
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.geminiApiKey}`
 
     // Construir as partes da requisição

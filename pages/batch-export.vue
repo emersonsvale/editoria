@@ -188,6 +188,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'creation', middleware: 'auth-creation' })
+
 useHead({
   title: 'Batch Export and Download',
 })

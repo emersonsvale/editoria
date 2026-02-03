@@ -6,6 +6,7 @@ export const iconMap: Record<string, string> = {
   'home': 'Home',
   'folder': 'Folder',
   'person': 'User',
+  'logout': 'LogOut',
   'info': 'Info',
   'settings': 'Settings',
   'close': 'X',

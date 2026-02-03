@@ -1,9 +1,6 @@
 <template>
   <nav class="fixed top-0 left-0 right-0 h-16 border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-black/80 backdrop-blur-md z-50 px-6 flex items-center justify-between">
     <NuxtLink to="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-      <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-        <span class="text-white text-xs font-bold">E</span>
-      </div>
       <span class="font-bold text-xl tracking-tight">EditorIA</span>
     </NuxtLink>
     <div class="flex items-center gap-6">

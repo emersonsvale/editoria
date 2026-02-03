@@ -11,12 +11,20 @@ export interface GeneratedImage {
   parentImageId?: string
 }
 
+/** Imagem anexada pelo usuário com role opcional (inspiração vs personagem) */
+export type AttachedImageRole = 'inspiration' | 'character'
+export interface AttachedImageItem {
+  url: string
+  role: AttachedImageRole
+}
+
 export interface ChatMessage {
   id: string
   role: 'user' | 'assistant' | 'system'
   content: string
   images?: GeneratedImage[]
-  attachedImages?: string[] // Imagens anexadas pelo usuário (Data URLs)
+  /** Imagens anexadas (URLs ou itens com role para inspiração/personagem) */
+  attachedImages?: (string | AttachedImageItem)[]
   createdAt: Date
   isLoading?: boolean
   error?: string
@@ -150,6 +158,22 @@ export const useChatStore = defineStore('chat', {
     },
 
     /**
+     * Define um projeto carregado do Supabase (adiciona ou substitui) e seleciona
+     */
+    setProjectFromSupabase(project: Project) {
+      const index = this.projects.findIndex(p => p.id === project.id)
+      if (index >= 0) {
+        this.projects[index] = project
+      } else {
+        this.projects.unshift(project)
+      }
+      this.currentProjectId = project.id
+      if (typeof window !== 'undefined' && this.settings.autoSave) {
+        this.saveToLocalStorage()
+      }
+    },
+
+    /**
      * Deleta um projeto
      */
     deleteProject(projectId: string) {
@@ -194,8 +218,9 @@ export const useChatStore = defineStore('chat', {
 
     /**
      * Adiciona uma mensagem do usuário
+     * @param attachedImages - URLs ou itens { url, role } para inspiração/personagem
      */
-    addUserMessage(content: string, attachedImages?: string[]): ChatMessage {
+    addUserMessage(content: string, attachedImages?: (string | AttachedImageItem)[]): ChatMessage {
       if (!this.currentProjectId) {
         this.createProject()
       }

@@ -147,14 +147,15 @@ Implementar persistência de:
 - Histórico de transações
 - Imagens geradas (opcional)
 
-## Pacotes de Créditos Sugeridos
+## Pacotes de Créditos (preços comerciais – Gemini 3 Pro)
 
-| Pacote | Créditos | Preço | Bônus |
-|--------|----------|-------|-------|
-| Básico | 50 | R$ 9,90 | - |
-| Popular | 150 | R$ 24,90 | +10 |
-| Pro | 500 | R$ 69,90 | +50 |
-| Business | 1000 | R$ 119,90 | +150 |
+| Pacote | Créditos | Preço |
+|--------|----------|-------|
+| Starter | 30 | R$ 39,90 |
+| Pro | 100 | R$ 99,90 |
+| Agency | 300 | R$ 297,90 |
+
+*Preços comerciais com margem positiva (~20–28%) considerando **Gemini 3 Pro Image** (custo R$ 0,72/crédito).*
 
 ## Tamanhos de Imagem
 

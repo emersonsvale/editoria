@@ -18,6 +18,7 @@
           : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
       ]"
       :title="item.label || item.name"
+      @click="(e: MouseEvent) => $emit('navigate', e, item.path)"
     >
       <Icon :name="item.icon" />
     </NuxtLink>
@@ -31,5 +32,6 @@ const { navigationItems, isActive } = useNavigation()
 
 defineEmits<{
   'new-project': []
+  (e: 'navigate', event: MouseEvent, path: string): void
 }>()
 </script>

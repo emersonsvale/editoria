@@ -5,9 +5,27 @@
  * A API Key fica no servidor, não é exposta ao cliente
  */
 
+import { getUserIdFromToken, deductUserCredit } from '~/server/utils/supabase'
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const body = await readBody(event)
+
+  const userId = await getUserIdFromToken(event)
+  if (!userId) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Não autorizado. Faça login para gerar imagens.'
+    })
+  }
+
+  const deducted = await deductUserCredit(userId)
+  if (!deducted) {
+    throw createError({
+      statusCode: 402,
+      statusMessage: 'Créditos insuficientes. Adquira mais créditos para continuar.'
+    })
+  }
 
   // Valida se a API Key está configurada
   if (!config.geminiApiKey) {
@@ -26,11 +44,6 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Prompt é obrigatório'
     })
   }
-
-  // TODO: Aqui você vai validar o usuário e verificar créditos
-  // const user = await getUserFromSession(event)
-  // if (!user) throw createError({ statusCode: 401, statusMessage: 'Não autorizado' })
-  // if (user.credits < config.creditsPerImage) throw createError({ statusCode: 402, statusMessage: 'Créditos insuficientes' })
 
   try {
     // Monta as partes do conteúdo
@@ -69,7 +82,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Chama a API do Gemini com retry para rate limiting
-    const model = 'gemini-2.5-flash-image'
+    const model = config.geminiImageModel || 'gemini-2.5-flash-image'
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.geminiApiKey}`
 
     let response: any
@@ -134,9 +147,6 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Nenhuma imagem foi gerada. Tente reformular seu prompt.'
       })
     }
-
-    // TODO: Deduz créditos do usuário após sucesso
-    // await deductCredits(user.id, config.creditsPerImage)
 
     return {
       success: true,

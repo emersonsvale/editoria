@@ -53,7 +53,15 @@
                 <span>{{ formatDate(image?.createdAt) }}</span>
               </div>
 
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                <button 
+                  class="flex items-center gap-2 px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-amber-200 text-sm"
+                  title="Adicionar ao próximo prompt como inspiração"
+                  @click="$emit('use-as-inspiration', image)"
+                >
+                  <Icon name="star" :size="16" />
+                  Usar como inspiração
+                </button>
                 <button 
                   class="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-white text-sm"
                   @click="$emit('variation', image)"
@@ -104,6 +112,7 @@ const emit = defineEmits<{
   (e: 'previous'): void
   (e: 'next'): void
   (e: 'variation', image: GeneratedImage): void
+  (e: 'use-as-inspiration', image: GeneratedImage): void
 }>()
 
 const copied = ref(false)

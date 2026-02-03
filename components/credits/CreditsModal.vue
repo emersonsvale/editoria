@@ -45,18 +45,6 @@
               </div>
             </div>
 
-            <!-- Info de custo -->
-            <div class="p-4 bg-violet-50 dark:bg-violet-900/20 rounded-xl border border-violet-200 dark:border-violet-800">
-              <div class="flex items-center gap-2 mb-2">
-                <Icon name="info" :size="18" class="text-violet-500" />
-                <p class="text-sm font-medium text-violet-700 dark:text-violet-300">Custo por geração</p>
-              </div>
-              <p class="text-xs text-slate-600 dark:text-slate-400">
-                Cada imagem gerada consome <span class="font-semibold text-violet-600 dark:text-violet-400">1 crédito</span>.
-                Variações e edições também consomem créditos.
-              </p>
-            </div>
-
             <!-- Pacotes de créditos -->
             <div class="space-y-3">
               <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Adquirir mais créditos</p>
@@ -64,14 +52,24 @@
               <div class="grid gap-2">
                 <button 
                   v-for="pack in creditPacks" 
-                  :key="pack.credits"
-                  class="flex items-center justify-between p-4 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all group"
+                  :key="pack.name"
+                  class="relative flex items-center justify-between p-4 rounded-xl transition-all group"
+                  :class="pack.popular 
+                    ? 'border-2 border-violet-500 bg-violet-50 dark:bg-violet-900/20 hover:bg-violet-100 dark:hover:bg-violet-900/30' 
+                    : 'border border-slate-200 dark:border-slate-700 hover:border-violet-500 hover:bg-violet-50 dark:hover:bg-violet-900/20'"
                 >
+                  <span 
+                    v-if="pack.popular" 
+                    class="absolute -top-2 left-3 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded-full bg-violet-500 text-white shadow-sm"
+                  >
+                    Mais popular
+                  </span>
                   <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
                       <Icon name="bolt" :size="20" class="text-white" />
                     </div>
                     <div class="text-left">
+                      <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ pack.name }}</p>
                       <p class="font-semibold text-slate-900 dark:text-white">{{ pack.credits }} créditos</p>
                       <p v-if="pack.bonus" class="text-xs text-green-500 font-medium">+{{ pack.bonus }} bônus</p>
                     </div>
@@ -115,12 +113,11 @@ defineEmits<{
   (e: 'close'): void
 }>()
 
-// Pacotes de créditos disponíveis
+// Preços comerciais (Gemini 3 Pro – custo R$ 0,72/cred). Quantidades ajustadas para margem positiva.
 const creditPacks = [
-  { credits: 50, price: 9.90, bonus: 0 },
-  { credits: 150, price: 24.90, bonus: 10 },
-  { credits: 500, price: 69.90, bonus: 50 },
-  { credits: 1000, price: 119.90, bonus: 150 }
+  { name: 'Starter', credits: 30, price: 39.90, bonus: 0, popular: false },
+  { name: 'Pro', credits: 100, price: 99.90, bonus: 0, popular: true },
+  { name: 'Agency', credits: 300, price: 297.90, bonus: 0, popular: false }
 ]
 </script>
 

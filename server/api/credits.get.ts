@@ -1,20 +1,37 @@
 /**
  * API Endpoint: GET /api/credits
- * Retorna os créditos do usuário atual
- * 
- * TODO: Implementar autenticação real
+ * Retorna os créditos do usuário autenticado (Supabase)
+ * Cliente deve enviar Authorization: Bearer <access_token>
  */
+import { getUserIdFromToken, getSupabaseAdmin } from '~/server/utils/supabase'
 
 export default defineEventHandler(async (event) => {
-  // TODO: Aqui você vai buscar os créditos do usuário autenticado
-  // const user = await getUserFromSession(event)
-  // if (!user) throw createError({ statusCode: 401, statusMessage: 'Não autorizado' })
-  // return { credits: user.credits }
+  const userId = await getUserIdFromToken(event)
+  if (!userId) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Não autorizado. Faça login.'
+    })
+  }
 
-  // Por enquanto, retorna créditos mockados para desenvolvimento
+  const admin = getSupabaseAdmin()
+  const { data, error } = await admin
+    .from('user_credits')
+    .select('credits, used, total')
+    .eq('user_id', userId)
+    .single()
+
+  if (error || !data) {
+    return {
+      credits: 0,
+      used: 0,
+      total: 0
+    }
+  }
+
   return {
-    credits: 100, // Créditos disponíveis
-    used: 15,     // Créditos já usados
-    total: 115    // Total de créditos adquiridos
+    credits: data.credits,
+    used: data.used,
+    total: data.total
   }
 })

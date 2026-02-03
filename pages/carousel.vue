@@ -552,6 +552,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'creation', middleware: 'auth-creation' })
+
 import type { CarouselTone, SocialNetwork } from '~/composables/useCarousel'
 
 useHead({

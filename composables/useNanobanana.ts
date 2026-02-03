@@ -27,10 +27,14 @@ export interface ChatResponse {
   creditsUsed: number
 }
 
+export type AttachedImageRole = 'inspiration' | 'character'
+
 export interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
   images?: string[]
+  /** Roles das imagens (inspiração vs personagem) quando há múltiplas imagens do usuário */
+  imageRoles?: AttachedImageRole[]
 }
 
 export interface UserCredits {
@@ -40,12 +44,23 @@ export interface UserCredits {
 }
 
 export const useNanobanana = () => {
-  // Estado
+  let auth: ReturnType<typeof useSupabaseAuth> | null = null
+  try {
+    auth = useSupabaseAuth()
+  } catch {
+    auth = null
+  }
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
+  function authHeaders(): Record<string, string> {
+    if (!auth) return {}
+    const token = auth.accessToken.value
+    return token ? { Authorization: `Bearer ${token}` } : {}
+  }
+
   /**
-   * Gera imagens usando a API interna
+   * Gera imagens usando a API interna (requer auth; deduz créditos no Supabase)
    */
   const generateImage = async (options: {
     prompt: string
@@ -58,6 +73,7 @@ export const useNanobanana = () => {
     try {
       const response = await $fetch<GenerateResponse>('/api/generate', {
         method: 'POST',
+        headers: authHeaders(),
         body: {
           prompt: options.prompt,
           aspectRatio: options.aspectRatio || '1:1',
@@ -150,6 +166,8 @@ export const useNanobanana = () => {
     message: string
     history?: ChatMessage[]
     attachedImages?: string[]
+    /** Ordem dos roles (inspiração / personagem) para cada imagem anexada */
+    attachedImageRoles?: AttachedImageRole[]
     imageSettings?: {
       aspectRatio?: ImageSize
     }
@@ -160,10 +178,12 @@ export const useNanobanana = () => {
     try {
       const response = await $fetch<ChatResponse>('/api/chat', {
         method: 'POST',
+        headers: authHeaders(),
         body: {
           message: options.message,
           history: options.history,
           attachedImages: options.attachedImages,
+          attachedImageRoles: options.attachedImageRoles,
           imageSettings: options.imageSettings
         }
       })
@@ -197,7 +217,7 @@ export const useNanobanana = () => {
    */
   const getCredits = async (): Promise<UserCredits> => {
     try {
-      return await $fetch<UserCredits>('/api/credits')
+      return await $fetch<UserCredits>('/api/credits', { headers: authHeaders() })
     } catch (err) {
       console.error('Erro ao buscar créditos:', err)
       return { credits: 0, used: 0, total: 0 }
