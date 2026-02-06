@@ -2,14 +2,8 @@
   <div class="h-screen w-screen flex bg-slate-100 dark:bg-slate-950 overflow-hidden">
     <!-- Toolbar lateral esquerda -->
     <aside class="w-16 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col items-center py-4 gap-3">
-      <!-- Logo -->
-      <NuxtLink 
-        to="/" 
-        class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:scale-105 transition-all"
-        title="Voltar ao início"
-      >
-        <span class="text-white font-bold text-sm italic">EI</span>
-      </NuxtLink>
+      <!-- Logo oficial -->
+      <AppLogo to="/" size="sm" title="Voltar ao início" />
 
       <div class="w-8 h-px bg-slate-200 dark:bg-slate-700 my-1" />
 

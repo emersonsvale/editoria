@@ -1,15 +1,37 @@
 /**
  * API Endpoint: POST /api/generate
  * Gera imagens usando o Gemini (Nano Banana)
- * 
+ *
  * A API Key fica no servidor, não é exposta ao cliente
  */
 
 import { getUserIdFromToken, deductUserCredit } from '~/server/utils/supabase'
 
+/** Aspect ratios aceitos pela API Gemini (evita 400 por valor inválido) */
+const ALLOWED_ASPECT_RATIOS = ['1:1', '9:16', '16:9', '3:4', '4:3', '3:2', '2:3', '5:4', '4:5', '21:9'] as const
+
+const MAX_PROMPT_LENGTH = 8000
+const MAX_INPUT_IMAGES = 4
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  const body = await readBody(event)
+
+  let body: Record<string, unknown>
+  try {
+    body = (await readBody(event)) as Record<string, unknown>
+  } catch {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Corpo da requisição inválido ou ausente.'
+    })
+  }
+
+  if (!body || typeof body !== 'object') {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Corpo da requisição inválido.'
+    })
+  }
 
   const userId = await getUserIdFromToken(event)
   if (!userId) {
@@ -27,7 +49,6 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Valida se a API Key está configurada
   if (!config.geminiApiKey) {
     throw createError({
       statusCode: 500,
@@ -35,32 +56,51 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Valida o body
-  const { prompt, aspectRatio, inputImages } = body
+  const { prompt: rawPrompt, aspectRatio, inputImages } = body
 
-  if (!prompt || typeof prompt !== 'string') {
+  if (rawPrompt === undefined || rawPrompt === null || typeof rawPrompt !== 'string') {
     throw createError({
       statusCode: 400,
       statusMessage: 'Prompt é obrigatório'
     })
   }
 
-  try {
-    // Monta as partes do conteúdo
-    const parts: Array<{ text?: string; inline_data?: { mime_type: string; data: string } }> = []
+  const prompt = (rawPrompt as string).trim()
+  if (!prompt) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Prompt não pode estar vazio.'
+    })
+  }
+  if (prompt.length > MAX_PROMPT_LENGTH) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: `Prompt muito longo. Use no máximo ${MAX_PROMPT_LENGTH} caracteres.`
+    })
+  }
 
-    // Adiciona o prompt de texto
+  const safeAspectRatio = aspectRatio && typeof aspectRatio === 'string' && ALLOWED_ASPECT_RATIOS.includes(aspectRatio as any)
+    ? aspectRatio
+    : '1:1'
+
+  try {
+    const parts: Array<{ text?: string; inline_data?: { mime_type: string; data: string } }> = []
     parts.push({ text: prompt })
 
-    // Adiciona imagens de entrada se houver (para edição)
     if (inputImages && Array.isArray(inputImages) && inputImages.length > 0) {
-      for (const img of inputImages) {
-        // Se for Data URL, extrai o base64
-        const base64Data = img.startsWith('data:') 
-          ? img.replace(/^data:image\/\w+;base64,/, '') 
+      const imagesToUse = inputImages.slice(0, MAX_INPUT_IMAGES)
+      for (const img of imagesToUse) {
+        if (typeof img !== 'string' || !img) continue
+        const base64Raw = img.startsWith('data:')
+          ? img.replace(/^data:image\/\w+;base64,/, '')
           : img
-        const mimeType = img.startsWith('data:image/jpeg') ? 'image/jpeg' : 'image/png'
-        
+        const base64Data = base64Raw.replace(/\s/g, '')
+        if (!base64Data.length) continue
+
+        let mimeType = 'image/png'
+        if (img.startsWith('data:image/jpeg') || img.startsWith('data:image/jpg')) mimeType = 'image/jpeg'
+        else if (img.startsWith('data:image/webp')) mimeType = 'image/webp'
+
         parts.push({
           inline_data: {
             mime_type: mimeType,
@@ -70,16 +110,10 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Monta a configuração de geração
     const generationConfig: Record<string, any> = {
       responseModalities: ['TEXT', 'IMAGE']
     }
-
-    if (aspectRatio) {
-      generationConfig.imageConfig = {
-        aspectRatio
-      }
-    }
+    generationConfig.imageConfig = { aspectRatio: safeAspectRatio }
 
     // Chama a API do Gemini com retry para rate limiting
     const model = config.geminiImageModel || 'gemini-2.5-flash-image'
@@ -101,18 +135,22 @@ export default defineEventHandler(async (event) => {
             generationConfig
           }
         })
-        break // Sucesso, sai do loop
+        break
       } catch (err: any) {
         lastError = err
-        // Se for rate limit (429), espera e tenta novamente
-        if (err.status === 429 || err.statusCode === 429) {
-          if (attempt < maxRetries - 1) {
-            // Espera 2, 4, 6 segundos (backoff)
-            await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 2000))
-            continue
-          }
+        const status = err.status ?? err.statusCode ?? err.data?.status
+        const isRateLimit = status === 429
+        const isBadRequest = status === 400
+
+        if (isRateLimit && attempt < maxRetries - 1) {
+          await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 2000))
+          continue
         }
-        throw err // Outro erro, não tenta novamente
+        if (isBadRequest && attempt < maxRetries - 1) {
+          await new Promise(resolve => setTimeout(resolve, 1500))
+          continue
+        }
+        throw err
       }
     }
     
@@ -155,34 +193,26 @@ export default defineEventHandler(async (event) => {
     }
 
   } catch (err: any) {
-    // Trata erros específicos da API do Gemini
-    let errorMessage = 'Erro ao gerar imagem'
-    let statusCode = 500
+    if (err.statusCode === 401 || err.statusCode === 402) throw err
+    if (err.statusCode === 400 && err.data?.statusMessage && !err.data?.error) throw err
 
-    if (err.data?.error?.message) {
-      errorMessage = err.data.error.message
-    } else if (err.message) {
-      errorMessage = err.message
-    }
+    let errorMessage = (err.data?.error?.message ?? err.message ?? 'Erro ao gerar imagem').toString()
+    let statusCode = err.status ?? err.statusCode ?? 500
+    const msg = errorMessage.toLowerCase()
 
-    // Verifica se é erro de rate limit (429)
-    if (err.status === 429 || err.statusCode === 429 || errorMessage.toLowerCase().includes('quota') || errorMessage.toLowerCase().includes('rate')) {
+    if (statusCode === 429 || msg.includes('quota') || msg.includes('rate')) {
       errorMessage = 'Muitas requisições. Aguarde alguns segundos e tente novamente.'
       statusCode = 429
-    }
-    // Verifica se é erro de conteúdo bloqueado
-    else if (errorMessage.toLowerCase().includes('safety') || errorMessage.toLowerCase().includes('blocked')) {
+    } else if (statusCode === 400 || msg.includes('invalid') || msg.includes('bad request')) {
+      errorMessage = 'Requisição inválida para o gerador de imagens. Tente um prompt mais curto ou sem caracteres especiais e tente novamente.'
+      statusCode = 400
+    } else if (msg.includes('safety') || msg.includes('blocked')) {
       errorMessage = 'O conteúdo foi bloqueado por políticas de segurança. Tente um prompt diferente.'
       statusCode = 422
     }
 
-    // Se já é um erro do Nuxt, repassa
-    if (err.statusCode) {
-      throw err
-    }
-
     throw createError({
-      statusCode,
+      statusCode: statusCode >= 400 && statusCode < 600 ? statusCode : 500,
       statusMessage: errorMessage
     })
   }

@@ -110,9 +110,7 @@
             <!-- Sobre -->
             <section class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50">
               <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-                  <span class="text-white font-bold text-sm italic">EI</span>
-                </div>
+                <AppLogo size="md" />
                 <div class="min-w-0">
                   <p class="font-semibold text-slate-900 dark:text-white">EditorIA</p>
                   <p class="text-xs text-slate-500 dark:text-slate-400">Gerador de imagens com IA</p>

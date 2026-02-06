@@ -99,11 +99,12 @@ export const useNanobanana = () => {
         errorMessage = err.message
       }
 
-      // Mensagens amigáveis para erros comuns
       if (err.statusCode === 402) {
         errorMessage = 'Créditos insuficientes. Adquira mais créditos para continuar.'
       } else if (err.statusCode === 401) {
         errorMessage = 'Faça login para gerar imagens.'
+      } else if (err.statusCode === 400 && err.data?.statusMessage) {
+        errorMessage = err.data.statusMessage
       }
 
       error.value = errorMessage

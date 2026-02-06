@@ -1,9 +1,7 @@
 <template>
   <nav class="fixed top-0 left-0 right-0 h-16 border-b border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md z-50 px-6 flex items-center justify-between">
     <NuxtLink to="/" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
-      <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-        <span class="text-white text-xs font-bold">E</span>
-      </div>
+      <AppLogo size="xs" />
       <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-slate-100">EditorIA</span>
     </NuxtLink>
 

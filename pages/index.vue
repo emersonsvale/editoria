@@ -379,7 +379,7 @@ const handleNewProject = async () => {
   } else {
     chatStore.createProject()
   }
-  await navigateTo('/editor')
+  await navigateTo({ path: '/editor', query: { new: '1' } })
 }
 
 function openProjectClick(project: { id: string }) {
@@ -443,7 +443,7 @@ const goToEditorWithSize = async (size: '1:1' | '16:9' | '9:16' | '4:3' | '3:4' 
     chatStore.createProject()
   }
   chatStore.updateSettings({ defaultImageSize: size })
-  await navigateTo('/editor')
+  await navigateTo({ path: '/editor', query: { new: '1' } })
 }
 
 // Templates de criação com prompts prontos
@@ -545,7 +545,7 @@ const goToEditorWithPrompt = async (prompt: string, size: '1:1' | '16:9' | '9:16
   if (typeof window !== 'undefined') {
     sessionStorage.setItem('editoria_initial_prompt', prompt)
   }
-  await navigateTo('/editor')
+  await navigateTo({ path: '/editor', query: { new: '1' } })
 }
 
 // Navega para o editor com a imagem de inspiração anexada (e prompt sugerido)
@@ -572,7 +572,7 @@ const goToEditorWithInspiration = async (item: { id: string; url: string; prompt
       sessionStorage.setItem('editoria_initial_prompt', item.prompt)
     }
   }
-  await navigateTo('/editor')
+  await navigateTo({ path: '/editor', query: { new: '1' } })
 }
 
 // Formata a data de atualização
